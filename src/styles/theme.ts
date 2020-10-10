@@ -5,30 +5,17 @@ export default {
     palette: {
       type: 'dark',
     },
-  }),
-  light: createMuiTheme({
-    palette: {
-      type: 'light',
+    typography: {
+      fontFamily: "'Roboto','Helvetica Neue','Arial','sans-serif', 'Syncopate'",
+      h1: {
+        fontFamily: "'Syncopate'",
+        color: 'white',
+        textTransform: 'uppercase'
+      },
     },
   }),
-  typography: {
-    fontFamily: [
-      '-apple-system',
-      'Syncopate',
-      'sans-serif',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
-  },
 };
 
 export type UserTheme = {
-  dark: Theme,
-  light: Theme
+  dark: Theme
 }

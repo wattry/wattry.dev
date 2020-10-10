@@ -9,7 +9,7 @@ import Header from './components/Header';
 
 const useStyles = makeStyles(theme => ({
   root: {},
-  background: {
+  video: {
     objectFit: 'cover',
     width: '100vw',
     height: '100vh',
@@ -21,13 +21,12 @@ const useStyles = makeStyles(theme => ({
 
 function App() {
   // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const { background } = useStyles();
-  const userTheme: Theme = true ? theme.dark : theme.light;
-
+  const { video } = useStyles();
+  
   return (
-    <ThemeProvider theme={userTheme}>
+    <ThemeProvider theme={theme.dark}>
       <AppBar />
-      <video className={background} autoPlay loop muted>
+      <video className={video} autoPlay loop muted>
         <source src={space} type='video/mp4' />
       </video>
       <Header />
