@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createStyles, fade, makeStyles, Theme } from '@material-ui/core';
 import DefaultAppBar from '@material-ui/core/AppBar'
 import {
@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+import Drawer from './Drawer';
 
 const useStyles = makeStyles(( theme: Theme ) => {
   return createStyles({
@@ -68,30 +69,45 @@ const useStyles = makeStyles(( theme: Theme ) => {
   })
 })
 
-export default function AppBar() {
+export default function AppBar(): JSX.Element {
   const classes = useStyles();
+  const [expanded, setExpanded] = useState({
+    top: false,
+    left: false,
+    bottom: false,
+    right: false
+  });
+
+  function handleClick(event: React.MouseEvent) {
+    setExpanded(prev => {
+      return {
+        ...prev,
+        top: !prev.top,
+      };
+    });
+  }
 
   return (
     <div className={classes.root}>
-      <DefaultAppBar position="static" className={classes.root}>
+      <DefaultAppBar position='relative' className={classes.root}>
         <Toolbar>
           <IconButton
-            edge="start"
+            edge='start'
             className={classes.menuButton}
-            color="inherit"
-            aria-label="open drawer"
-          >
+            color='inherit'
+            aria-label='open drawer'
+            onClick={handleClick}>
             <MenuIcon />
           </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap>
-            Ryan Wattrus (wattry)
+          <Typography className={classes.title} variant='h6' noWrap>
+            wattry
           </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
             <InputBase
-              placeholder="Search…"
+              placeholder='Search…'
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
@@ -101,6 +117,7 @@ export default function AppBar() {
           </div>
         </Toolbar>
       </DefaultAppBar>
+      <Drawer expanded={expanded} setExpanded={setExpanded} />
     </div>
   );
 }
