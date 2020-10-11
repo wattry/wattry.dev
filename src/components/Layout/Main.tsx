@@ -1,9 +1,6 @@
 import React, { FC } from 'react';
-import { createStyles, Theme, makeStyles, Typography } from '@material-ui/core';
-import {
-  Container,
-  Paper
-} from '@material-ui/core';
+import { createStyles, Theme, makeStyles } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,14 +17,38 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function Main(): JSX.Element {
+export default function Main(props: any): JSX.Element {
   const classes = useStyles();
   return (
-    <div className={classes.main} >
-      <p className={classes.info}>
-        This is a great little space,
-         what is the point of this little thing
-      </p>
-    </div>
+    <>
+      <div className={classes.main}>
+        <Typography variant='h2'>Summary</Typography>
+        <p className={classes.info}></p>
+      </div>
+      <div className={classes.main}>
+        <Typography variant='h2'>Skills</Typography>
+        <p className={classes.info}></p>
+      </div>
+      <div className={classes.main}>
+        <Typography variant='h2'>Experience</Typography>
+        <p className={classes.info}></p>
+      </div>
+      <div className={classes.main}>
+        <Typography variant='h2'>Career</Typography>
+        <p className={classes.info}></p>
+      </div>
+      <div className={classes.main}>
+        <Typography variant='h3'>History</Typography>
+        <p className={classes.info}></p>
+      </div>
+      <div className={classes.main}>
+        <Typography variant='h3'>Early Career</Typography>
+        <p className={classes.info}></p>
+      </div>
+      <div className={classes.main}>
+        <Typography variant='h2'>Education</Typography>
+        <p className={classes.info}></p>
+      </div>
+    </>
   );
 }

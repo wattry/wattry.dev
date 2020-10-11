@@ -69,7 +69,7 @@ const useStyles = makeStyles(( theme: Theme ) => {
   })
 })
 
-export default function AppBar(): JSX.Element {
+export default function AppBar(props: any): JSX.Element {
   const classes = useStyles();
   const [expanded, setExpanded] = useState({
     top: false,
