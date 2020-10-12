@@ -1,35 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
-import ListSubheader from '@material-ui/core/ListSubheader';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import {
-  ShortText,
-  ImportantDevices,
-  DoneAll,
-  Highlight,
-  Work,
-  History,
-  Alarm,
-  School,
-} from '@material-ui/icons';
 
-declare interface SubMenu {
-  title: string;
-  icon: JSX.Element;
-}
-
-declare interface Menu {
-  title: string;
-  icon: JSX.Element;
-  subMenus?: SubMenu[];
-}
+import menuItems from '../../menuItems';
+import { Menu, SubMenu } from '../../interfaces/menu.interface';
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -44,42 +24,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
-const menuItems = [
-  {
-    title: 'Summary',
-    icon: <ShortText />,
-  },
-  {
-    title: 'Skills',
-    icon: <ImportantDevices />,
-  },
-  {
-    title: 'Experience',
-    icon: <DoneAll />,
-  },
-  {
-    title: 'Career',
-    icon: <Work />,
-    subMenus: [
-      {
-        title: 'Highlights',
-        icon: <Highlight />,
-      },
-      {
-        title: 'History',
-        icon: <History />,
-      },
-      {
-        title: 'Early Career',
-        icon: <Alarm />,
-      },
-    ],
-  },
-  {
-    title: 'Education',
-    icon: <School />,
-  },
-];
 
 export default function Drawer(props: {
   expanded: {
@@ -116,22 +60,22 @@ export default function Drawer(props: {
       onKeyDown={toggleDrawer(anchor, false)}>
       <List>
         {menuItems.map(({ title, icon, subMenus }: Menu, index) => (
-          <>
-            <ListItem button key={title}>
+          <Fragment key={index}>
+            <ListItem button key={index}>
               <ListItemIcon>{icon}</ListItemIcon>
               <ListItemText primary={title} />
             </ListItem>
             {subMenus ? (
               <List>
                 {subMenus.map(({ title, icon }: SubMenu, index) => (
-                  <ListItem button key={title} className={classes.nested}>
+                  <ListItem button key={index} className={classes.nested}>
                     <ListItemIcon>{icon}</ListItemIcon>
                     <ListItemText primary={title} />
                   </ListItem>
                 ))}
               </List>
             ) : null}
-          </>
+          </Fragment>
         ))}
       </List>
       <Divider />

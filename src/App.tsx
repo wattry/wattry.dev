@@ -6,6 +6,7 @@ import Main from './components/Layout/Main';
 import theme from './styles/theme';
 import space from './static/space.mp4';
 import Header from './components/Header';
+import Footer from './components/Layout/Footer';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -31,6 +32,7 @@ function App() {
       </video>
       <Header />
       <Main />
+      <Footer />
     </ThemeProvider>
   );
 }

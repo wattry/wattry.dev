@@ -11,8 +11,13 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      marginBottom: theme.spacing(10)
-    }   
+      flexDirection: 'column',
+      marginBottom: theme.spacing(10),
+    },
+    h1: {
+      letterSpacing: '3vw',
+      lineHeight: '1.2',
+    },
   }),
 );
 
@@ -23,9 +28,9 @@ export default function Header(props: any): JSX.Element {
     <header className={classes.root}>
       <Typography variant='h1'>
         Explore
-          <Typography variant='h3'>
-            Ryan Wattrus
-          </Typography>
+      </Typography>
+      <Typography variant='h3' component="h2" >
+        Ryan Wattrus
       </Typography>
     </header>
   );
