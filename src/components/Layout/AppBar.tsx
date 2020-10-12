@@ -75,7 +75,7 @@ export default function AppBar(props: any): JSX.Element {
     top: false,
     left: false,
     bottom: false,
-    right: false
+    right: false,
   });
 
   function handleClick(event: React.MouseEvent) {
@@ -86,6 +86,13 @@ export default function AppBar(props: any): JSX.Element {
       };
     });
   }
+    type Anchor = 'top' | 'left' | 'bottom' | 'right';
+
+    const toggleDrawer = (anchor: Anchor, open: boolean, title?: string) => (
+      event: React.MouseEvent,
+    ) => {
+      setExpanded({ ...expanded, [anchor]: open });
+    };
 
   return (
     <div className={classes.root}>
@@ -96,8 +103,7 @@ export default function AppBar(props: any): JSX.Element {
             className={classes.menuButton}
             color='inherit'
             aria-label='open drawer'
-            onClick={handleClick}
-          >
+            onClick={handleClick}>
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant='h6' noWrap>
@@ -118,10 +124,7 @@ export default function AppBar(props: any): JSX.Element {
           </div>
         </Toolbar>
       </DefaultAppBar>
-      <Drawer
-        expanded={expanded}
-        setExpanded={setExpanded}
-      />
+      <Drawer toggleDrawer={toggleDrawer} expanded={expanded} />
     </div>
   );
 }

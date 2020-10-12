@@ -52,10 +52,13 @@ export default function Main(props: any): JSX.Element {
           {menuItems.map(({ title, icon, content, component, subMenus }: Menu, index) => (
             <div className={classes.section} key={index}>
               <Section title={title} icon={icon} content={content} component={component} />
-              {subMenus?.map(({ title, icon, content, component }: SubMenu, index: number) => (
+              {subMenus?.map(({ title, icon, content, component }: SubMenu, index: number, array: SubMenu[]) => (
                 <div className={classes.subMenu} key={index}>
                   <Section title={title} icon={icon} content={content} component={component} />
-                  <Divider component='li' variant='inset' />
+                  {index !== array.length - 1
+                    ? <Divider component='li' />
+                    : null
+                  }
                 </div>
               ))}
               <Divider component='li' />

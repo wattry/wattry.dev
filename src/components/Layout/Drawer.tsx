@@ -1,15 +1,13 @@
-import React, { Fragment, useState } from 'react';
-import clsx from 'clsx';
+import React, { Fragment } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Divider,
   ListItem,
   List,
   SwipeableDrawer,
   ListItemIcon,
   ListItemText,
 } from '@material-ui/core';
-import { Link } from 'react-scroll';
+import { Link, scroller } from 'react-scroll';
 
 import menuItems from '../../menuItems';
 import { Menu, SubMenu } from '../../interfaces/menu.interface';
@@ -34,70 +32,65 @@ const useStyles = makeStyles((theme) => ({
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
 export default function Drawer({
-  expanded,
-  setExpanded,
+  toggleDrawer,
+  expanded
 }: {
-  expanded: {
-    top: boolean;
-    bottom: boolean;
-    left: boolean;
-    right: boolean;
-  };
-  setExpanded: any;
+    toggleDrawer: any,
+    expanded: {
+      top: boolean,
+      bottom: boolean,
+      left: boolean,
+      right: boolean
+    }
 }): JSX.Element {
   const classes = useStyles();
-  const toggleDrawer = (anchor: Anchor, open: boolean) => (
-    event: React.KeyboardEvent | React.MouseEvent,
+  const handleKeypress = (anchor: Anchor, open: boolean, title: string) => (
+    event: React.KeyboardEvent,
   ) => {
-    if (
-      event &&
-      event.type === 'keydown' &&
-      ((event as React.KeyboardEvent).key === 'Tab' ||
-        (event as React.KeyboardEvent).key === 'Shift')
-    ) {
-      return;
+    if (event.key === 'Enter') {
+      scroller.scrollTo(title, {
+        duration: 1500,
+        delay: 100,
+        smooth: true,
+      });
+      toggleDrawer(anchor, open);
     }
-
-    console.log('expanded', expanded, anchor);
-
-    setExpanded({ ...expanded, [anchor]: open });
   };
 
   const list = (anchor: Anchor): JSX.Element => (
-    <div role='presentation'>
-      <List>
-        {menuItems.map(({ title, icon, subMenus }: Menu, index) => (
-          <Fragment key={index}>
-            <Link to={title} smooth={true} duration={1000}>
-              <ListItem
-                onClick={toggleDrawer(anchor, false)}
-                onKeyDown={toggleDrawer(anchor, false)}>
-                <ListItemIcon>{icon}</ListItemIcon>
-                <ListItemText primary={title} />
-              </ListItem>
-            </Link>
-            {subMenus ? (
-              <List>
-                {subMenus.map(({ title, icon }: SubMenu, index) => (
-                  <Fragment key={index}>
-                    <Link to={title} smooth={true} duration={1000}>
-                      <ListItem
-                        className={classes.nested}
-                        onClick={toggleDrawer(anchor, false)}
-                        onKeyDown={toggleDrawer(anchor, false)}>
-                        <ListItemIcon>{icon}</ListItemIcon>
-                        <ListItemText primary={title} />
-                      </ListItem>
-                    </Link>
-                  </Fragment>
-                ))}
-              </List>
-            ) : null}
-          </Fragment>
-        ))}
-      </List>
-      <Divider />
-    </div>
+    <List>
+      {menuItems.map(({ title, icon, subMenus }: Menu, index) => (
+        <Fragment key={index}>
+          <Link to={title} smooth={true} duration={1000}>
+            <ListItem
+              button
+              onClick={toggleDrawer(anchor, false, title)}
+              onKeyDown={handleKeypress(anchor, false, title)}>
+              <ListItemIcon>{icon}</ListItemIcon>
+              <ListItemText primary={title} />
+            </ListItem>
+          </Link>
+          {subMenus ? (
+            <List>
+              {subMenus.map(({ title, icon }: SubMenu, index) => (
+                <Fragment key={index}>
+                  <Link to={title} smooth={true} duration={1000}>
+                    <ListItem
+                      button
+                      className={classes.nested}
+                      onClick={toggleDrawer(anchor, false, title)}
+                      onKeyDown={handleKeypress(anchor, false, title)}>
+                      <ListItemIcon>{icon}</ListItemIcon>
+                      <ListItemText primary={title} />
+                    </ListItem>
+                  </Link>
+                </Fragment>
+              ))}
+            </List>
+          ) : null}
+        </Fragment>
+      ))}
+    </List>
   );
 
   return (
