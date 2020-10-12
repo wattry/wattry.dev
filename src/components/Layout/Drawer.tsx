@@ -10,7 +10,6 @@ import {
   ListItemText
 } from '@material-ui/core';
 
-
 import menuItems from '../../menuItems';
 import { Menu, SubMenu } from '../../interfaces/menu.interface';
 
@@ -66,6 +65,7 @@ export default function Drawer(props: {
 
     props.setExpanded({ ...props.expanded, [anchor]: open });
   };
+
 
   const list = (anchor: Anchor): JSX.Element => (
     <div
