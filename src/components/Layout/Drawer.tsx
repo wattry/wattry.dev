@@ -1,12 +1,15 @@
 import React, { Fragment, useEffect } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import {
+  Divider,
+  ListItem,
+  List,
+  SwipeableDrawer,
+  ListItemIcon,
+  ListItemText
+} from '@material-ui/core';
+
 
 import menuItems from '../../menuItems';
 import { Menu, SubMenu } from '../../interfaces/menu.interface';
@@ -21,9 +24,23 @@ const useStyles = makeStyles((theme) => ({
   nested: {
     paddingLeft: theme.spacing(5),
   },
+  zoom: {
+    position: 'fixed',
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
+  },
 }));
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
+
+interface Props {
+  /**
+   * Injected by the documentation to work in an iframe.
+   * You won't need it on your project.
+   */
+  window?: () => Window;
+  children: React.ReactElement;
+}
 
 export default function Drawer(props: {
   expanded: {
