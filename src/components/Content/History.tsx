@@ -6,22 +6,24 @@ import ArrowForwardIos from '@material-ui/icons/ArrowForwardIos';
 import { History } from '../../interfaces/history.interface';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    
-  },
+  root: {},
   achievements: {
     '& h4': {
-      marginBottom: theme.spacing(1)
-    }
-  }
-}))
+      marginBottom: theme.spacing(1),
+    },
+  },
+}));
 
-export default ({ history }: any): JSX.Element => {
+export default ({ history }: { history: History[] }): JSX.Element => {
   const classes = useStyles();
 
   return (
-      history.map(
-        ({ employer, position, dates, description, summary, keyAchievements }: History, index: number) => {
+    <Fragment>
+      {history.map(
+        (
+          { employer, position, dates, description, summary, keyAchievements }: History,
+          index: number,
+        ) => {
           return (
             <Fragment key={index}>
               <Typography gutterBottom={false} color='textPrimary' variant='body1'>
@@ -48,23 +50,24 @@ export default ({ history }: any): JSX.Element => {
               </ul>
               {keyAchievements ? (
                 <div className={classes.achievements}>
-                  <Typography color='textPrimary' variant='h5' component="h4">
+                  <Typography color='textPrimary' variant='h5' component='h4'>
                     Key Achievements
                   </Typography>
-                    {keyAchievements.map((paragraph: string, index) => {
-                      return (
-                        <div key={index}>
+                  {keyAchievements.map((paragraph: string, index) => {
+                    return (
+                      <div key={index}>
                         <Typography align='justify' color='textPrimary' variant='body1'>
                           <ArrowForwardIos fontSize='small' /> {paragraph}
-                          </Typography>
-                        </div>
-                      );
-                    })}
+                        </Typography>
+                      </div>
+                    );
+                  })}
                 </div>
               ) : null}
             </Fragment>
           );
         },
-      )
+      )}
+    </Fragment>
   );
-}
+};

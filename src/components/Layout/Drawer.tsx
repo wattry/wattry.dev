@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useState } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -7,8 +7,9 @@ import {
   List,
   SwipeableDrawer,
   ListItemIcon,
-  ListItemText
+  ListItemText,
 } from '@material-ui/core';
+import { Link } from 'react-scroll';
 
 import menuItems from '../../menuItems';
 import { Menu, SubMenu } from '../../interfaces/menu.interface';
@@ -32,16 +33,10 @@ const useStyles = makeStyles((theme) => ({
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
-interface Props {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  window?: () => Window;
-  children: React.ReactElement;
-}
-
-export default function Drawer(props: {
+export default function Drawer({
+  expanded,
+  setExpanded,
+}: {
   expanded: {
     top: boolean;
     bottom: boolean;
@@ -63,32 +58,38 @@ export default function Drawer(props: {
       return;
     }
 
-    props.setExpanded({ ...props.expanded, [anchor]: open });
+    console.log('expanded', expanded, anchor);
+
+    setExpanded({ ...expanded, [anchor]: open });
   };
 
-
   const list = (anchor: Anchor): JSX.Element => (
-    <div
-      className={clsx(classes.list, {
-        [classes.fullList]: anchor === 'top' || anchor === 'bottom',
-      })}
-      role='presentation'
-      onClick={toggleDrawer(anchor, false)}
-      onKeyDown={toggleDrawer(anchor, false)}>
+    <div role='presentation'>
       <List>
         {menuItems.map(({ title, icon, subMenus }: Menu, index) => (
           <Fragment key={index}>
-            <ListItem button key={index}>
-              <ListItemIcon>{icon}</ListItemIcon>
-              <ListItemText primary={title} />
-            </ListItem>
+            <Link to={title} smooth={true} duration={1000}>
+              <ListItem
+                onClick={toggleDrawer(anchor, false)}
+                onKeyDown={toggleDrawer(anchor, false)}>
+                <ListItemIcon>{icon}</ListItemIcon>
+                <ListItemText primary={title} />
+              </ListItem>
+            </Link>
             {subMenus ? (
               <List>
                 {subMenus.map(({ title, icon }: SubMenu, index) => (
-                  <ListItem button key={index} className={classes.nested}>
-                    <ListItemIcon>{icon}</ListItemIcon>
-                    <ListItemText primary={title} />
-                  </ListItem>
+                  <Fragment key={index}>
+                    <Link to={title} smooth={true} duration={1000}>
+                      <ListItem
+                        className={classes.nested}
+                        onClick={toggleDrawer(anchor, false)}
+                        onKeyDown={toggleDrawer(anchor, false)}>
+                        <ListItemIcon>{icon}</ListItemIcon>
+                        <ListItemText primary={title} />
+                      </ListItem>
+                    </Link>
+                  </Fragment>
                 ))}
               </List>
             ) : null}
@@ -105,7 +106,7 @@ export default function Drawer(props: {
         <React.Fragment key={anchor}>
           <SwipeableDrawer
             anchor={anchor}
-            open={props.expanded[anchor]}
+            open={expanded[anchor]}
             onClose={toggleDrawer(anchor, false)}
             onOpen={toggleDrawer(anchor, true)}>
             {list(anchor)}

@@ -96,7 +96,8 @@ export default function AppBar(props: any): JSX.Element {
             className={classes.menuButton}
             color='inherit'
             aria-label='open drawer'
-            onClick={handleClick}>
+            onClick={handleClick}
+          >
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant='h6' noWrap>
@@ -117,7 +118,10 @@ export default function AppBar(props: any): JSX.Element {
           </div>
         </Toolbar>
       </DefaultAppBar>
-      <Drawer expanded={expanded} setExpanded={setExpanded} />
+      <Drawer
+        expanded={expanded}
+        setExpanded={setExpanded}
+      />
     </div>
   );
 }

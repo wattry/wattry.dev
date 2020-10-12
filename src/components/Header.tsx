@@ -6,13 +6,13 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       position: 'relative',
-      height: '100vh',
+      height: '80vh',
       textAlign: 'center',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       flexDirection: 'column',
-      marginBottom: theme.spacing(10),
+      marginBottom: theme.spacing(20),
     },
     h1: {
       letterSpacing: '3vw',

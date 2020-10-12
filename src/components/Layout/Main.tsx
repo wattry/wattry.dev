@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStyles, Theme, makeStyles } from '@material-ui/core';
-import { Typography, Divider } from '@material-ui/core';
+import { Divider } from '@material-ui/core';
 
 import menuItems from '../../menuItems';
 import Section from '../Content/Section';
@@ -33,8 +33,8 @@ const useStyles = makeStyles((theme: Theme) =>
       },
       '& li': {
         marginBottom: theme.spacing(2),
-        listStyleType: 'none'
-      }
+        listStyleType: 'none',
+      },
     },
     subMenu: {
       paddingLeft: theme.spacing(1),

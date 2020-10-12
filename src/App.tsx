@@ -1,5 +1,5 @@
 import React from 'react';
-import { ThemeProvider, useMediaQuery, Theme, makeStyles } from '@material-ui/core';
+import { ThemeProvider, Theme, makeStyles } from '@material-ui/core';
 import './App.css';
 import AppBar from './components/Layout/AppBar';
 import Main from './components/Layout/Main';
@@ -8,7 +8,7 @@ import space from './static/space.mp4';
 import Header from './components/Header';
 import Footer from './components/Layout/Footer';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   video: {
     objectFit: 'cover',
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
 function App() {
   // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const { video } = useStyles();
-  
+
   return (
     <ThemeProvider theme={theme.dark}>
       <AppBar />

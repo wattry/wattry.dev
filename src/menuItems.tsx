@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   ShortText,
-  ImportantDevices,
   DoneAll,
   Highlight,
   Work,
@@ -14,6 +13,7 @@ import { Menu } from './interfaces/menu.interface';
 import { History } from './interfaces/history.interface';
 import List from './components/Content/List'
 import HistoryComponent from './components/Content/History';
+import SkillsTable from './components/Content/SkillsTable';
 
 const MenuItems: Menu[] = [
   {
@@ -25,15 +25,34 @@ const MenuItems: Menu[] = [
     icon: <ShortText />,
   },
   {
-    title: 'Skills',
-    content: [],
-    component: (content: string[]): JSX.Element => <List paragraphs={content} />,
-    icon: <ImportantDevices />,
-  },
-  {
-    title: 'Experience',
-    content: [],
-    component: (content: string[]): JSX.Element => <List paragraphs={content} />,
+    title: 'Skills and Experience',
+    content: [
+      'Business process analysis and UML design for documenting requirements, use and test cases.',
+      'Building and deploying applications with Docker and AWS EC2 containers. ',
+      'Relational Databases Design: MySQL, Postgres and Oracle.',
+      'Working in a dynamic team environment and managing communication flow.',
+      'Writing backend applications with Node.js, Java, C# and Python.',
+      'Writing Web applications in HTML 5, CSS 3, Bootstrap 4, JavaScript, JQuery, Node.js, AJAX.',
+      'Writing web APIs using REST and GraphQL.',
+      'Integrating applications and external systems into applications.',
+      'AWS serverless application design and deployment using Serverless application model.',
+      'Using communication tools to improve information and knowledge flow.',
+      'Collaborating on new architecture for business applications.',
+      'Writing scripts for Windows and Unix OS environments.',
+      'Agile techniques: SCRUM, SPRINT and KANBAN.',
+      'Working in high-pressure and time-sensitive environments.',
+      'Knowledge of both hardware, software and networks.',
+      'Building secure applications using public-private key encryption, hashing and JWT’s.',
+      'Involved in leadership while in high school, college and in the workplace.',
+      'Version control with Git and CVS.',
+      'Comprehensive analysis of organizational dynamics and social structures.',
+      'Exposure to UNIX (Ubuntu, Mac OS and CentOS) as well as Windows.',
+      'Test driven development with regression testing and unit testing using Jest',
+      'Understanding financial tools to make business decisions.',
+      'Using build dependency management tools such as npm and yarn.',
+      'Writing VBA macros to automate business processes.',
+    ],
+    component: (content: string[]): JSX.Element => <SkillsTable skills={content} />,
     icon: <DoneAll />,
   },
   {
@@ -81,7 +100,7 @@ const MenuItems: Menu[] = [
             ],
           },
         ],
-        component: (content: any): JSX.Element => <HistoryComponent history={content} />,
+        component: (content: History[]): JSX.Element => <HistoryComponent history={content} />,
         icon: <HistoryIcon />,
       },
       {
