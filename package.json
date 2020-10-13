@@ -25,7 +25,7 @@
     "start": "HTTPS=true react-scripts start",
     "prebuild": "rm -rf docs build",
     "build": "react-scripts build",
-    "postbuild": "mv ./build ./docs & cp CNAME ./docs",
+    "postbuild": "mv ./build ./docs && cp CNAME ./docs",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
