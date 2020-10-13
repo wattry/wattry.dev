@@ -10,6 +10,7 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import Drawer from './Drawer';
+import { GitHub, Twitter } from '@material-ui/icons';
 
 const useStyles = makeStyles(( theme: Theme ) => {
   return createStyles({
@@ -122,6 +123,25 @@ export default function AppBar(props: any): JSX.Element {
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
+
+          <IconButton
+            aria-label='GitHub profile external link'
+            aria-controls='menu-appbar'
+            aria-haspopup='true'
+            href='https://github.com/wattry'
+            target='_blank'
+            color='inherit'>
+            <GitHub />
+          </IconButton>
+          <IconButton
+            aria-label='Twitter profile external link'
+            aria-controls='menu-appbar'
+            aria-haspopup='true'
+            href='https://twitter.com/TheITGuyRy'
+            target='_blank'
+            color='inherit'>
+            <Twitter />
+          </IconButton>
         </Toolbar>
       </DefaultAppBar>
       <Drawer toggleDrawer={toggleDrawer} expanded={expanded} />
