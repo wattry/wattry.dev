@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createStyles, Theme, makeStyles } from '@material-ui/core';
 import { Divider } from '@material-ui/core';
+import axios from 'axios';
 
 import menuItems from '../../menuItems';
-import Section from '../Content/Section';
+import Section from '../content/Section';
 import { Menu, SubMenu } from '../../interfaces/menu.interface';
+
+const BASE_URL = 'https://api.linkedin.com';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,6 +47,24 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function Main(props: any): JSX.Element {
   const classes = useStyles();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    console.log('token', token);
+    
+    axios(`/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((response) => {
+        console.log(response.data);
+      });
+  }, [])
 
   return (
     <main>

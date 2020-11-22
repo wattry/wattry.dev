@@ -1,5 +1,7 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+A big thanks to <a href="https://www.openode.io/">Cloud hosted on opeNode.io</a> for providing free hosting and great nodejs services.
+
 ## Available Scripts
 
 In the project directory, you can run:

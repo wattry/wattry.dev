@@ -1,12 +1,13 @@
 import React from 'react';
 import { ThemeProvider, Theme, makeStyles } from '@material-ui/core';
 import './App.css';
-import AppBar from './components/Layout/AppBar';
-import Main from './components/Layout/Main';
+import AppBar from './components/layout/AppBar';
+import Main from './components/layout/Main';
 import theme from './styles/theme';
 import space from './static/space.mp4';
 import Header from './components/Header';
-import Footer from './components/Layout/Footer';
+import Footer from './components/layout/Footer';
+import Router from './Routes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -20,12 +21,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+
 function App() {
   // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const { video } = useStyles();
 
   return (
     <ThemeProvider theme={theme.dark}>
+      <Router />
       <AppBar />
       <video className={video} autoPlay loop muted>
         <source src={space} type='video/mp4' />

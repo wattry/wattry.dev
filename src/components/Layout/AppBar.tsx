@@ -10,7 +10,7 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import Drawer from './Drawer';
-import { GitHub, Twitter } from '@material-ui/icons';
+import { GitHub, LinkedIn, Twitter, AccountCircle } from '@material-ui/icons';
 
 const useStyles = makeStyles(( theme: Theme ) => {
   return createStyles({
@@ -141,6 +141,21 @@ export default function AppBar(props: any): JSX.Element {
             target='_blank'
             color='inherit'>
             <Twitter />
+          </IconButton>
+          <IconButton
+            aria-label='LinkedIn profile external link'
+            aria-controls='menu-appbar'
+            aria-haspopup='true'
+            href='https://www.linkedin.com/in/ryan-wattrus'
+            target='_blank'
+            color='inherit'>
+            <LinkedIn />
+          </IconButton>
+          <IconButton
+            aria-haspopup='true'
+            href='/login'
+            color='inherit'>
+            <AccountCircle /> 
           </IconButton>
         </Toolbar>
       </DefaultAppBar>

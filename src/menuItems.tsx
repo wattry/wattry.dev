@@ -11,9 +11,9 @@ import {
 
 import { Menu } from './interfaces/menu.interface';
 import { History } from './interfaces/history.interface';
-import List from './components/Content/List'
-import HistoryComponent from './components/Content/History';
-import SkillsTable from './components/Content/SkillsTable';
+import List from './components/content/List'
+import HistoryComponent from './components/content/History';
+import SkillsTable from './components/content/SkillsTable';
 
 const MenuItems: Menu[] = [
   {
