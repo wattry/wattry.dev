@@ -4,35 +4,22 @@ import './App.css';
 import AppBar from './components/layout/AppBar';
 import Main from './components/layout/Main';
 import theme from './styles/theme';
-import space from './static/space.mp4';
 import Header from './components/Header';
 import Footer from './components/layout/Footer';
 import Router from './Routes';
+import Background from './components/layout/Background';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
-  video: {
-    objectFit: 'cover',
-    width: '100vw',
-    height: '100vh',
-    position: 'fixed',
-    top: 0,
-    left: 0,
-  },
+  root: {}
 }));
-
 
 function App() {
   // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const { video } = useStyles();
-
   return (
     <ThemeProvider theme={theme.dark}>
       <Router />
       <AppBar />
-      <video className={video} autoPlay loop muted>
-        <source src={space} type='video/mp4' />
-      </video>
+      <Background />
       <Header />
       <Main />
       <Footer />

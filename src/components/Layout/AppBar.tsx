@@ -1,22 +1,26 @@
-import React, { useState } from 'react';
-import { createStyles, fade, makeStyles, Theme } from '@material-ui/core';
-import DefaultAppBar from '@material-ui/core/AppBar'
+import React, { SyntheticEvent, useEffect, useState } from 'react';
+import { createStyles, fade, makeStyles, Theme } from '@material-ui/core/styles';
+import { Toolbar, IconButton, Typography, InputBase, Tooltip, Zoom } from '@material-ui/core';
 import {
-  Toolbar,
-  IconButton,
-  Typography,
-  InputBase
-} from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import Drawer from './Drawer';
-import { GitHub, LinkedIn, Twitter, AccountCircle } from '@material-ui/icons';
+  GitHub,
+  LinkedIn,
+  Twitter,
+  AccountCircle,
+  PowerSettingsNew,
+  Menu as MenuIcon,
+  Search as SearchIcon,
+} from '@material-ui/icons';
+import { AppBar as DefaultAppBar } from '@material-ui/core';
+import { useCookies } from 'react-cookie';
 
-const useStyles = makeStyles(( theme: Theme ) => {
+import Drawer from './Drawer';
+import authProvider from '../../providers/authProvider';
+
+const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
     root: {
       flexGrow: 1,
-      backgroundColor: theme.palette.background.default
+      backgroundColor: theme.palette.background.default,
     },
     menuButton: {
       marginRight: theme.spacing(2),
@@ -67,11 +71,28 @@ const useStyles = makeStyles(( theme: Theme ) => {
         },
       },
     },
-  })
-})
+  });
+});
+
+type Anchor = 'top' | 'left' | 'bottom' | 'right';
+
+interface AuthResponse {
+  authenticated: boolean;
+  message: string;
+}
 
 export default function AppBar(props: any): JSX.Element {
   const classes = useStyles();
+  const { searchParams } = new URL(window.location.href);
+  const [code] = useState(searchParams.get('code'));
+  const [state] = useState(searchParams.get('state'));
+  const [error, setError] = useState(searchParams.get('error'));
+  const [cookies] = useCookies();
+  const [userProfile, setUserProfile] = useState({
+    first: '',
+    last: '',
+    displayImage: '',
+  });
   const [expanded, setExpanded] = useState({
     top: false,
     left: false,
@@ -79,21 +100,64 @@ export default function AppBar(props: any): JSX.Element {
     right: false,
   });
 
+  const toggleDrawer = (anchor: Anchor, open: boolean, title?: string) => (
+    event: React.MouseEvent,
+  ) => {
+    setExpanded({ ...expanded, [anchor]: open });
+  };
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    if (!userProfile.displayImage && userData.displayImage) {
+
+      setUserProfile(userData);
+    }
+  }, [userProfile]);
+
+  useEffect(() => {
+    if (code && state) {
+      authProvider
+        .login({ code, state })
+        .then(({ authenticated, message }: AuthResponse) => {
+          const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+          setUserProfile(userData);
+        })
+        .catch(({ authenticated, message }: AuthResponse) => {
+          setError(message);
+        });
+    }
+  }, [code, state, error]);
+
   function handleClick(event: React.MouseEvent) {
-    setExpanded(prev => {
+    setExpanded((prev) => {
       return {
         ...prev,
         top: !prev.top,
       };
     });
   }
-    type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
-    const toggleDrawer = (anchor: Anchor, open: boolean, title?: string) => (
-      event: React.MouseEvent,
-    ) => {
-      setExpanded({ ...expanded, [anchor]: open });
-    };
+  function handleLogout() {
+    authProvider
+      .logout()
+      .then(({ authenticated, message }: AuthResponse) => {
+        console.log('success', message, authenticated);
+        setUserProfile({
+          first: '',
+          last: '',
+          displayImage: '',
+        });
+      })
+      .catch(({ authenticated, message }: AuthResponse) => {
+        console.log('error', message, authenticated);
+      });
+  }
+
+  function handleLogin() {
+    authProvider.login().then(({ authenticated, message }: AuthResponse) => {
+      console.log(authenticated, message);
+    });
+  }
 
   return (
     <div className={classes.root}>
@@ -123,40 +187,67 @@ export default function AppBar(props: any): JSX.Element {
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
-
-          <IconButton
-            aria-label='GitHub profile external link'
-            aria-controls='menu-appbar'
-            aria-haspopup='true'
-            href='https://github.com/wattry'
-            target='_blank'
-            color='inherit'>
-            <GitHub />
-          </IconButton>
-          <IconButton
-            aria-label='Twitter profile external link'
-            aria-controls='menu-appbar'
-            aria-haspopup='true'
-            href='https://twitter.com/TheITGuyRy'
-            target='_blank'
-            color='inherit'>
-            <Twitter />
-          </IconButton>
-          <IconButton
-            aria-label='LinkedIn profile external link'
-            aria-controls='menu-appbar'
-            aria-haspopup='true'
-            href='https://www.linkedin.com/in/ryan-wattrus'
-            target='_blank'
-            color='inherit'>
-            <LinkedIn />
-          </IconButton>
-          <IconButton
-            aria-haspopup='true'
-            href='/login'
-            color='inherit'>
-            <AccountCircle /> 
-          </IconButton>
+          <Tooltip title="Open wattry's GitHub" TransitionComponent={Zoom}>
+            <IconButton
+              aria-label="Open wattry's GitHub"
+              aria-controls='menu-appbar'
+              aria-haspopup='true'
+              href='https://github.com/wattry'
+              target='_blank'
+              color='inherit'>
+              <GitHub />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Open wattry's(@TheITGuyRy) Twitter" TransitionComponent={Zoom}>
+            <IconButton
+              aria-label="Open wattry's(@TheITGuyRy) Twitter"
+              aria-controls='menu-appbar'
+              aria-haspopup='true'
+              href='https://twitter.com/TheITGuyRy'
+              target='_blank'
+              color='inherit'>
+              <Twitter />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Open wattry's LinkedIn page" TransitionComponent={Zoom}>
+            <IconButton
+              aria-label="Open wattry's LinkedIn page"
+              aria-controls='menu-appbar'
+              aria-haspopup='true'
+              href='https://www.linkedin.com/in/ryan-wattrus'
+              target='_blank'
+              color='inherit'>
+              <LinkedIn />
+            </IconButton>
+          </Tooltip>
+          {!userProfile.displayImage ? (
+            <Tooltip
+              title='Use LinkedIn to request a resume'
+              placement='left'
+              TransitionComponent={Zoom}>
+              <IconButton
+                aria-label='Use LinkedIn to request a resume'
+                aria-controls='menu-appbar'
+                aria-haspopup='true'
+                onClick={handleLogin}
+                color='inherit'>
+                <AccountCircle />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            <Tooltip placement='left' title='Logout of LinkedIn' TransitionComponent={Zoom}>
+              <IconButton
+                aria-label='Logout of LinkedIn'
+                aria-controls='menu-appbar'
+                aria-haspopup='true'
+                size='medium'
+                style={{ background: `url(${userProfile.displayImage})` }}
+                onClick={handleLogout}
+                color='inherit'>
+                <PowerSettingsNew />
+              </IconButton>
+            </Tooltip>
+          )}
         </Toolbar>
       </DefaultAppBar>
       <Drawer toggleDrawer={toggleDrawer} expanded={expanded} />

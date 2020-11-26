@@ -14,21 +14,25 @@
     "@types/react-scroll": "^1.8.0",
     "axios": "^0.20.0",
     "fontsource-roboto": "^2.1.4",
+    "material-ui-cookie-consent": "^0.1.0",
     "react": "^16.13.1",
+    "react-cookie": "^4.0.3",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.3",
     "react-scroll": "^1.8.1",
-    "typescript": "~3.7.2"
+    "typescript": "~3.7.2",
+    "uuid": "^8.3.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "@types/uuid": "^8.3.0",
     "jest-environment-jsdom-fifteen": "^1.0.2"
   },
   "scripts": {
-    "start": "HTTPS=true react-scripts start",
+    "start": "HTTPS=true PORT=443 HOST=wattry.dev.local react-scripts start",
     "prebuild": "rm -rf docs build",
     "build": "react-scripts build",
     "postbuild": "mv ./build ./docs && cp CNAME ./docs",

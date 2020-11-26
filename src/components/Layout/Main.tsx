@@ -48,24 +48,6 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function Main(props: any): JSX.Element {
   const classes = useStyles();
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-
-    console.log('token', token);
-    
-    axios(`/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((response) => {
-        console.log(response.data);
-      });
-  }, [])
-
   return (
     <main>
       <div className={classes.main}>
