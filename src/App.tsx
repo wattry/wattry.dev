@@ -9,7 +9,7 @@ import Footer from './components/layout/Footer';
 import Router from './Routes';
 import Background from './components/layout/Background';
 import AuthProvider from './providers/AuthProvider';
-import NotifyProvider from './providers/NotifyProvider';
+import NotificationProvider from './providers/NotifyProvider';
 import Notification from './components/layout/Notification';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -20,7 +20,7 @@ function App() {
   // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   return (
     <AuthProvider>
-      <NotifyProvider>
+      <NotificationProvider>
         <ThemeProvider theme={theme.dark}>
           <Router />
           <AppBar />
@@ -30,7 +30,7 @@ function App() {
           <Main />
           <Footer />
         </ThemeProvider>
-      </NotifyProvider>
+      </NotificationProvider>
     </AuthProvider>
   );
 }
