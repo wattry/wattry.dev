@@ -1,9 +1,24 @@
+import React, { createContext } from 'react';
 import axios from 'axios';
 import { v4 as uuid } from 'uuid';
 
-interface AuthResponse {
+import idbPromise from './idb';
+export interface AuthResponse {
   authenticated: boolean;
   message: string;
+  data?: any,
+  error?: any
+}
+
+export interface UserData {
+  first: string,
+  last: string,
+  displayImage: string
+}
+
+export interface LoginParams{
+  code: string;
+  state: string;
 }
 
 function oAuthRedirect(): void {
@@ -65,16 +80,16 @@ function oAuthRedirect(): void {
   window.location.replace(`${REACT_APP_LINKEDIN_URL}/oauth/v2/authorization?${encoded}`);
 }
 
-export default {
-  login: async (params?: { code: string; state: string }): Promise<AuthResponse> => {
+const authProvider = {
+  login: async (params?: LoginParams): Promise<AuthResponse> => {
     const { code, state } = params || {};
 
     if (!code && !state) {
       // Build up the linkedIn /authorization redirect.
       oAuthRedirect();
       return Promise.resolve({ authenticated: false, message: 'Redirecting to LinkedIn OAuth' });
-    } else if (state && state !== localStorage.getItem(state)) {
-      return Promise.reject({ authenticated: false, message: 'Failed XRSF check!' });
+    } else if (state && !localStorage.getItem(state)) {
+      return Promise.reject({ authenticated: false, message: 'Failed XRSF check! Your request may have been compromised' });
     }
 
     return axios('/login', {
@@ -84,17 +99,19 @@ export default {
         state,
       },
     })
-      .then(({ data }) => {
+      .then(async ({ data }) => {
         const { userData, expiryDate } = data || {};
+        cleanup();
 
-        localStorage.setItem('userData', JSON.stringify(userData));
-        localStorage.setItem('expires', expiryDate);
-        window.history.replaceState({}, window.document.title, window.location.origin);
-
-        return { authenticated: true, message: 'Login Successful' };
+        const idb = await idbPromise;
+        const promises = Object.entries(userData).map(([key, value]) => idb.put('user-info', value, key));
+        
+        promises.push(idb.put('user-info', expiryDate, 'expiryDate'));        
+        return { authenticated: true, message: 'Login Successful', data: { ...userData } };
       })
       .catch((error) => {
-        return { authenticated: false, message: 'Login Unsuccessful' };
+        cleanup();
+        return { authenticated: false, error, message: 'Login Unsuccessful' };
       });
   },
   logout: async (params?: any): Promise<AuthResponse> => {
@@ -115,4 +132,18 @@ export default {
 function cleanup() {
   localStorage.clear();
   window.history.replaceState({}, window.document.title, window.location.origin);
+  idbPromise.then((idb) => idb.clear('user-info'));
 }
+
+export const AuthContext = createContext(authProvider)
+
+function AuthProvider({ children }: { children: any }) {
+  return (
+    <AuthContext.Provider value={authProvider}>
+      {children}
+    </AuthContext.Provider>
+  )
+}
+
+
+export default AuthProvider;

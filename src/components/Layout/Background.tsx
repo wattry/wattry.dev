@@ -1,7 +1,6 @@
 import React from 'react';
 import space from '../../static/space.mp4';
-import { ThemeProvider, Theme, makeStyles } from '@material-ui/core';
-import propTypes from 'prop-types';
+import { Theme, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},

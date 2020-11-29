@@ -1,6 +1,13 @@
-import React, { SyntheticEvent, useEffect, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState, useContext } from 'react';
 import { createStyles, fade, makeStyles, Theme } from '@material-ui/core/styles';
-import { Toolbar, IconButton, Typography, InputBase, Tooltip, Zoom } from '@material-ui/core';
+import {
+  Toolbar,
+  IconButton,
+  Typography,
+  InputBase,
+  Tooltip,
+  Zoom,
+} from '@material-ui/core';
 import {
   GitHub,
   LinkedIn,
@@ -8,13 +15,14 @@ import {
   AccountCircle,
   PowerSettingsNew,
   Menu as MenuIcon,
-  Search as SearchIcon,
+  Search as SearchIcon
 } from '@material-ui/icons';
 import { AppBar as DefaultAppBar } from '@material-ui/core';
-import { useCookies } from 'react-cookie';
 
+import idbPromise from '../../providers/idb';
 import Drawer from './Drawer';
-import authProvider from '../../providers/authProvider';
+import { AuthContext } from '../../providers/AuthProvider';
+import { NotifyContext } from '../../providers/NotifyProvider';
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -76,23 +84,35 @@ const useStyles = makeStyles((theme: Theme) => {
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
+interface UserData {
+  first: string;
+  last: string;
+  displayImage: string;
+}
+
 interface AuthResponse {
   authenticated: boolean;
   message: string;
+  data?: any;
+  error?: any;
 }
 
+const emptyUserData = {
+  first: '',
+  last: '',
+  displayImage: '',
+};
+
 export default function AppBar(props: any): JSX.Element {
-  const classes = useStyles();
+  const classes = useStyles();  
+  const authProvider = useContext(AuthContext);
+  const { notify } = useContext(NotifyContext);
   const { searchParams } = new URL(window.location.href);
   const [code] = useState(searchParams.get('code'));
   const [state] = useState(searchParams.get('state'));
   const [error, setError] = useState(searchParams.get('error'));
-  const [cookies] = useCookies();
-  const [userProfile, setUserProfile] = useState({
-    first: '',
-    last: '',
-    displayImage: '',
-  });
+  const [authenticated, setAuthenticated] = useState(false);
+  const [userProfile, setUserProfile] = useState<UserData>(emptyUserData);
   const [expanded, setExpanded] = useState({
     top: false,
     left: false,
@@ -107,26 +127,44 @@ export default function AppBar(props: any): JSX.Element {
   };
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-    if (!userProfile.displayImage && userData.displayImage) {
+    if (!userProfile.displayImage) {
+      idbPromise.then(async (idb) => {
+        const [first, last, displayImage] = await Promise.all([
+          idb.get('user-info', 'first'),
+          idb.get('user-info', 'last'),
+          idb.get('user-info', 'displayImage'),
+        ]);
 
-      setUserProfile(userData);
+        if (first && last && displayImage) {
+          setAuthenticated(true);
+          setUserProfile({
+            first,
+            last,
+            displayImage,
+          });
+
+        }
+
+      });
     }
-  }, [userProfile]);
+  }, [notify, userProfile]);
 
   useEffect(() => {
-    if (code && state) {
+    if (!authenticated && code && state) {
       authProvider
         .login({ code, state })
-        .then(({ authenticated, message }: AuthResponse) => {
-          const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-          setUserProfile(userData);
+        .then(({ authenticated, message, data }: AuthResponse) => {
+          setAuthenticated(authenticated);
+          setUserProfile(data);
+          notify('success', message);
         })
         .catch(({ authenticated, message }: AuthResponse) => {
+          setAuthenticated(authenticated);
           setError(message);
+          notify('error', message);
         });
     }
-  }, [code, state, error]);
+  }, [code, state, error, authProvider, notify, authenticated]);
 
   function handleClick(event: React.MouseEvent) {
     setExpanded((prev) => {
@@ -141,27 +179,23 @@ export default function AppBar(props: any): JSX.Element {
     authProvider
       .logout()
       .then(({ authenticated, message }: AuthResponse) => {
-        console.log('success', message, authenticated);
-        setUserProfile({
-          first: '',
-          last: '',
-          displayImage: '',
-        });
+        setUserProfile(emptyUserData);
+        notify('success', message);
       })
       .catch(({ authenticated, message }: AuthResponse) => {
-        console.log('error', message, authenticated);
+        notify('error', message);
       });
   }
 
   function handleLogin() {
     authProvider.login().then(({ authenticated, message }: AuthResponse) => {
-      console.log(authenticated, message);
+      notify('info', message);
     });
   }
 
   return (
     <div className={classes.root}>
-      <DefaultAppBar position='relative' className={classes.root}>
+      <DefaultAppBar id="top-anchor" position='relative' className={classes.root}>
         <Toolbar>
           <IconButton
             edge='start'
