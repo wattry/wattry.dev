@@ -147,7 +147,7 @@ export default function AppBar(props: any): JSX.Element {
 
       });
     }
-  }, [notify, userProfile]);
+  }, [userProfile]);
 
   useEffect(() => {
     if (!authenticated && code && state) {
@@ -158,10 +158,10 @@ export default function AppBar(props: any): JSX.Element {
           setUserProfile(data);
           notify('success', message);
         })
-        .catch(({ authenticated, message }: AuthResponse) => {
-          setAuthenticated(authenticated);
-          setError(message);
-          notify('error', message);
+        .catch(error => {
+          setAuthenticated(false);
+          setError(error);
+          notify('error', 'Login Unsuccessful');
         });
     }
   }, [code, state, error, authProvider, notify, authenticated]);
@@ -180,10 +180,12 @@ export default function AppBar(props: any): JSX.Element {
       .logout()
       .then(({ authenticated, message }: AuthResponse) => {
         setUserProfile(emptyUserData);
+        setAuthenticated(false);
         notify('success', message);
       })
-      .catch(({ authenticated, message }: AuthResponse) => {
-        notify('error', message);
+      .catch(error => {
+        setAuthenticated(false);
+        notify('error', 'Logout Unsuccessful');
       });
   }
 

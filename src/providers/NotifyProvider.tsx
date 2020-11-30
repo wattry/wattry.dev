@@ -30,7 +30,7 @@ function NotificationProvider({ children }: { children: any }) {
   }
 
   function close() {
-    setState(notifyInitialState);
+    setState(({ type, message}: { type: AlertProps['severity'], message: string }) => ({ type, message, open: false }));
   }
 
   return <NotifyContext.Provider value={{ notify, close, state }}>{children}</NotifyContext.Provider>;

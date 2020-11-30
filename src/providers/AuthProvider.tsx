@@ -29,14 +29,24 @@ function oAuthRedirect(): void {
     REACT_APP_LINKEDIN_URL,
     REACT_APP_RESPONSE_TYPE,
     REACT_APP_CLIENT_ID,
+    REACT_APP_API
   } = process.env;
 
-  if (process.env.NODE_ENV === 'development') {
+  if (
+    process.env.NODE_ENV === 'development' &&
+    (!REACT_APP_HOST ||
+      !REACT_APP_REDIRECT_URL ||
+      !REACT_APP_LINKEDIN_SCOPES ||
+      !REACT_APP_RESPONSE_TYPE ||
+      !REACT_APP_CLIENT_ID ||
+      !REACT_APP_LINKEDIN_URL ||
+      !REACT_APP_API)
+  ) {
     console.log(
       'REACT_APP_HOST',
       REACT_APP_HOST !== undefined,
       'REACT_APP_REDIRECT_URL',
-      REACT_APP_REDIRECT_URL !== undefined,
+      REACT_APP_REDIRECT_URL,
       'REACT_APP_LINKEDIN_SCOPES',
       REACT_APP_LINKEDIN_SCOPES !== undefined,
       'REACT_APP_LINKEDIN_URL',
@@ -45,6 +55,8 @@ function oAuthRedirect(): void {
       REACT_APP_RESPONSE_TYPE !== undefined,
       'REACT_APP_CLIENT_ID',
       REACT_APP_CLIENT_ID !== undefined,
+      'REACT_APP_API',
+      REACT_APP_API,
     );
   }
 
@@ -54,7 +66,8 @@ function oAuthRedirect(): void {
     !REACT_APP_LINKEDIN_SCOPES ||
     !REACT_APP_RESPONSE_TYPE ||
     !REACT_APP_CLIENT_ID ||
-    !REACT_APP_LINKEDIN_URL
+    !REACT_APP_LINKEDIN_URL ||
+    !REACT_APP_API
   ) {
     throw new Error('oAuth configured incorrectly');
   }
@@ -92,40 +105,34 @@ const authProvider = {
       return Promise.reject({ authenticated: false, message: 'Failed XRSF check! Your request may have been compromised' });
     }
 
-    return axios('/login', {
+    return axios(`${process.env.REACT_APP_API}/login`, {
       method: 'POST',
       data: {
         code,
         state,
       },
-    })
-      .then(async ({ data }) => {
-        const { userData, expiryDate } = data || {};
-        cleanup();
+    }).then(async ({ data }) => {
+      const { userData, expiryDate } = data || {};
+      cleanup();
 
-        const idb = await idbPromise;
-        const promises = Object.entries(userData).map(([key, value]) => idb.put('user-info', value, key));
-        
-        promises.push(idb.put('user-info', expiryDate, 'expiryDate'));        
-        return { authenticated: true, message: 'Login Successful', data: { ...userData } };
-      })
-      .catch((error) => {
-        cleanup();
-        return { authenticated: false, error, message: 'Login Unsuccessful' };
-      });
+      const idb = await idbPromise;
+      const promises = Object.entries(userData).map(([key, value]) =>
+        idb.put('user-info', value, key),
+      );
+
+      promises.push(idb.put('user-info', expiryDate, 'expiryDate'));
+      return { authenticated: true, message: 'Login Successful', data: { ...userData } };
+    });
   },
   logout: async (params?: any): Promise<AuthResponse> => {
-    return axios('/logout', {
+    cleanup();
+
+    return axios(`${process.env.REACT_APP_API}/logout`, {
       withCredentials: true,
       method: 'DELETE',
-    })
-      .then((data) => {
-        cleanup();
-        return { authenticated: false, message: 'Logout Successful' };
-      })
-      .catch((error) => {
-        return { authenticated: false, message: 'Logout Unsuccessful' };
-      });
+    }).then((data) => {
+      return { authenticated: false, message: 'Logout Successful' };
+    });
   },
 };
 
