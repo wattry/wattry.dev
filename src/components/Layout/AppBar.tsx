@@ -1,13 +1,6 @@
 import React, { SyntheticEvent, useEffect, useState, useContext } from 'react';
 import { createStyles, fade, makeStyles, Theme } from '@material-ui/core/styles';
-import {
-  Toolbar,
-  IconButton,
-  Typography,
-  InputBase,
-  Tooltip,
-  Zoom,
-} from '@material-ui/core';
+import { Toolbar, IconButton, Typography, InputBase, Tooltip, Zoom } from '@material-ui/core';
 import {
   GitHub,
   LinkedIn,
@@ -15,7 +8,7 @@ import {
   AccountCircle,
   PowerSettingsNew,
   Menu as MenuIcon,
-  Search as SearchIcon
+  Search as SearchIcon,
 } from '@material-ui/icons';
 import { AppBar as DefaultAppBar } from '@material-ui/core';
 
@@ -104,13 +97,16 @@ const emptyUserData = {
 };
 
 export default function AppBar(props: any): JSX.Element {
-  const classes = useStyles();  
+  const { searchParams } = new URL(window.location.href);
+  const code = searchParams.get('code');
+  const state = searchParams.get('state');
+  const oAuthError = searchParams.get('error');
+
+  const classes = useStyles();
   const authProvider = useContext(AuthContext);
   const { notify } = useContext(NotifyContext);
-  const { searchParams } = new URL(window.location.href);
-  const [code] = useState(searchParams.get('code'));
-  const [state] = useState(searchParams.get('state'));
-  const [error, setError] = useState(searchParams.get('error'));
+
+  const [error, setError] = useState<string | boolean>();
   const [authenticated, setAuthenticated] = useState(false);
   const [userProfile, setUserProfile] = useState<UserData>(emptyUserData);
   const [expanded, setExpanded] = useState({
@@ -125,6 +121,12 @@ export default function AppBar(props: any): JSX.Element {
   ) => {
     setExpanded({ ...expanded, [anchor]: open });
   };
+
+  useEffect(() => {
+    if (oAuthError) {
+      setError(oAuthError);
+    }
+  }, [error, oAuthError])
 
   useEffect(() => {
     if (!userProfile.displayImage) {
@@ -142,15 +144,13 @@ export default function AppBar(props: any): JSX.Element {
             last,
             displayImage,
           });
-
         }
-
       });
     }
   }, [userProfile]);
 
   useEffect(() => {
-    if (!authenticated && code && state) {
+    if (!authenticated && !error && code && state) {
       authProvider
         .login({ code, state })
         .then(({ authenticated, message, data }: AuthResponse) => {
@@ -158,13 +158,13 @@ export default function AppBar(props: any): JSX.Element {
           setUserProfile(data);
           notify('success', message);
         })
-        .catch(error => {
+        .catch((error) => {
           setAuthenticated(false);
           setError(error);
-          notify('error', 'Login Unsuccessful');
+          notify('error', `Login unsuccessful: ${error.message}`);
         });
     }
-  }, [code, state, error, authProvider, notify, authenticated]);
+  }, [error, authProvider, authenticated, code, state, notify]);
 
   function handleClick(event: React.MouseEvent) {
     setExpanded((prev) => {
@@ -183,7 +183,7 @@ export default function AppBar(props: any): JSX.Element {
         setAuthenticated(false);
         notify('success', message);
       })
-      .catch(error => {
+      .catch((error) => {
         setAuthenticated(false);
         notify('error', 'Logout Unsuccessful');
       });
@@ -197,7 +197,7 @@ export default function AppBar(props: any): JSX.Element {
 
   return (
     <div className={classes.root}>
-      <DefaultAppBar id="top-anchor" position='relative' className={classes.root}>
+      <DefaultAppBar id='top-anchor' position='relative' className={classes.root}>
         <Toolbar>
           <IconButton
             edge='start'
@@ -277,7 +277,11 @@ export default function AppBar(props: any): JSX.Element {
                 aria-controls='menu-appbar'
                 aria-haspopup='true'
                 size='medium'
-                style={{ background: `url(${userProfile.displayImage})` }}
+                style={{
+                  background: `url(${userProfile.displayImage})`,
+                  height: '4rem',
+                  width: '4rem',
+                }}
                 onClick={handleLogout}
                 color='inherit'>
                 <PowerSettingsNew />
