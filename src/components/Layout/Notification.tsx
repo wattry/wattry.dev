@@ -23,10 +23,6 @@ export default function Notification() {
   const classes = useStyles();
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
     close();
   };
 

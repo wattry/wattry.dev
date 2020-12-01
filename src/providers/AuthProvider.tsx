@@ -4,10 +4,8 @@ import { v4 as uuid } from 'uuid';
 
 import idbPromise from './idb';
 export interface AuthResponse {
-  authenticated: boolean;
   message: string;
-  data?: any,
-  error?: any
+  user_data?: any;
 }
 
 export interface UserData {
@@ -109,36 +107,38 @@ const authProvider = {
     } else if (state && !localStorage.getItem(state)) {
       return Promise.reject({ authenticated: false, message: 'Failed XRSF check! Your request may have been compromised' });
     }
+    
+    cleanup();
 
     return post('/login', {
       code,
       state,
-    }).then(async ({ data }) => {
-      const { user_data, expiry_date } = data;
-      cleanup();
-
+    }).then(async ({ data: user_data }) => {
       const idb = await idbPromise;
-      const promises = Object.entries(user_data).map(([key, value]) =>
-        idb.put('user-info', value, key),
-      );
 
-      promises.push(idb.put('user-info', expiry_date, 'expiryDate'));
-      return { authenticated: true, message: 'Login Successful', data: { ...user_data } };
+      Object.entries(user_data).map(([key, value]) =>
+        idb.put('user-data', value, key),
+      );
+      
+      return { message: 'Login Successful', user_data };
     });
   },
   logout: async (params?: any): Promise<AuthResponse> => {
     return post(
       '/logout').then(() => {
       cleanup();
-      return { authenticated: false, message: 'Logout Successful' };
+      return { message: 'Logout Successful' };
     });
   },
+  checkAuth: (params?: any): boolean  => {
+    return document.cookie.includes('authenticated=true');
+  }
 };
 
 function cleanup() {
   localStorage.clear();
   window.history.replaceState({}, window.document.title, window.location.origin);
-  idbPromise.then((idb) => idb.clear('user-info'));
+  idbPromise.then((idb) => idb.clear('user-data'));
 }
 
 export const AuthContext = createContext(authProvider)

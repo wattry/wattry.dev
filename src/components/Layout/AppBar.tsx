@@ -11,6 +11,7 @@ import {
   Search as SearchIcon,
 } from '@material-ui/icons';
 import { AppBar as DefaultAppBar } from '@material-ui/core';
+import { useCookies } from 'react-cookie';
 
 import idbPromise from '../../providers/idb';
 import Drawer from './Drawer';
@@ -84,9 +85,8 @@ interface UserData {
 }
 
 interface AuthResponse {
-  authenticated: boolean;
   message: string;
-  data?: any;
+  user_data?: any;
   error?: any;
 }
 
@@ -107,7 +107,6 @@ export default function AppBar(props: any): JSX.Element {
   const { notify } = useContext(NotifyContext);
 
   const [error, setError] = useState<string | boolean>();
-  const [authenticated, setAuthenticated] = useState(false);
   const [userProfile, setUserProfile] = useState<UserData>(emptyUserData);
   const [expanded, setExpanded] = useState({
     top: false,
@@ -129,16 +128,15 @@ export default function AppBar(props: any): JSX.Element {
   }, [error, oAuthError])
 
   useEffect(() => {
-    if (!userProfile.displayImage) {
+    if (authProvider.checkAuth() && !userProfile.displayImage) {
       idbPromise.then(async (idb) => {
         const [first, last, displayImage] = await Promise.all([
-          idb.get('user-info', 'first'),
-          idb.get('user-info', 'last'),
-          idb.get('user-info', 'displayImage'),
+          idb.get('user-data', 'first'),
+          idb.get('user-data', 'last'),
+          idb.get('user-data', 'displayImage'),
         ]);
 
         if (first && last && displayImage) {
-          setAuthenticated(true);
           setUserProfile({
             first,
             last,
@@ -147,24 +145,24 @@ export default function AppBar(props: any): JSX.Element {
         }
       });
     }
-  }, [userProfile]);
+  }, [authProvider, userProfile]);
 
   useEffect(() => {
-    if (!authenticated && !error && code && state) {
+    if (!authProvider.checkAuth() && !oAuthError && code && state) {
       authProvider
         .login({ code, state })
-        .then(({ authenticated, message, data }: AuthResponse) => {
-          setAuthenticated(authenticated);
-          setUserProfile(data);
+        .then(({ message, user_data }: AuthResponse) => {
+          setUserProfile(user_data);
           notify('success', message);
         })
         .catch((error) => {
-          setAuthenticated(false);
           setError(error);
           notify('error', `Login unsuccessful: ${error.message}`);
         });
+    } else if (oAuthError) {
+      notify('error', `Authentication error: ${oAuthError}`);
     }
-  }, [error, authProvider, authenticated, code, state, notify]);
+  }, [error, authProvider, code, state, notify, oAuthError]);
 
   function handleClick(event: React.MouseEvent) {
     setExpanded((prev) => {
@@ -178,19 +176,17 @@ export default function AppBar(props: any): JSX.Element {
   function handleLogout() {
     authProvider
       .logout()
-      .then(({ authenticated, message }: AuthResponse) => {
+      .then(({ message }: AuthResponse) => {
         setUserProfile(emptyUserData);
-        setAuthenticated(false);
         notify('success', message);
       })
       .catch((error) => {
-        setAuthenticated(false);
         notify('error', 'Logout Unsuccessful');
       });
   }
 
   function handleLogin() {
-    authProvider.login().then(({ authenticated, message }: AuthResponse) => {
+    authProvider.login().then(({ message }: AuthResponse) => {
       notify('info', message);
     });
   }
