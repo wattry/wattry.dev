@@ -96,7 +96,7 @@ const { post } = axios.create({
   timeout: 30000
 });
 
-const authProvider = {
+export const authProvider = {
   login: async (params?: LoginParams): Promise<AuthResponse> => {
     const { code, state } = params || {};
 
@@ -126,12 +126,15 @@ const authProvider = {
   logout: async (params?: any): Promise<AuthResponse> => {
     return post(
       '/logout').then(() => {
-      cleanup();
-      return { message: 'Logout Successful' };
-    });
+        cleanup();
+        return { message: 'Logout Successful' };
+      });
   },
-  checkAuth: (params?: any): boolean  => {
+  checkAuth: (params?: any): boolean => {
     return document.cookie.includes('authenticated=true');
+  },
+  checkCookieConsent: (params?: any): boolean => {
+    return document.cookie.includes('consented=true');
   }
 };
 

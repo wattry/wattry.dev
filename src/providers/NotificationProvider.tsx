@@ -7,21 +7,21 @@ interface NotifyProps {
   type: AlertProps['severity'];
 }
 
-export const notifyInitialState: NotifyProps = {
+export const initialState: NotifyProps = {
   open: false,
   message: '',
   type: undefined,
 };
 
 
-export const NotifyContext = createContext({
+export const NotificationContext = createContext({
   notify: (type: AlertProps['severity'], message: string) => {},
   close: () => {},
-  state: notifyInitialState,
+  state: initialState,
 });
 
 function NotificationProvider({ children }: { children: any }) {
-  const [state, setState] = useState<NotifyProps>(notifyInitialState);
+  const [state, setState] = useState<NotifyProps>(initialState);
   
   function notify(type: AlertProps['severity'], message: string) {
     if (!state.open) {
@@ -33,7 +33,7 @@ function NotificationProvider({ children }: { children: any }) {
     setState(({ type, message}: { type: AlertProps['severity'], message: string }) => ({ type, message, open: false }));
   }
 
-  return <NotifyContext.Provider value={{ notify, close, state }}>{children}</NotifyContext.Provider>;
+  return <NotificationContext.Provider value={{ notify, close, state }}>{children}</NotificationContext.Provider>;
 }
 
 export default NotificationProvider;

@@ -4,6 +4,12 @@ const theme: UserTheme = {
   dark: responsiveFontSizes(
     createMuiTheme({
       palette: {
+        primary: {
+          main: '#303030',
+        },
+        secondary: {
+          main: '#93cbd8',
+        },
         type: 'dark',
       },
       typography: {
@@ -13,7 +19,7 @@ const theme: UserTheme = {
           color: 'white',
           textTransform: 'uppercase',
           letterSpacing: '1.5vw',
-          lineHeight: '1.2'
+          lineHeight: '1.2',
         },
         h2: {
           fontFamily: "'Syncopate'",

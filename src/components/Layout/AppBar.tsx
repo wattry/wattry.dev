@@ -11,12 +11,11 @@ import {
   Search as SearchIcon,
 } from '@material-ui/icons';
 import { AppBar as DefaultAppBar } from '@material-ui/core';
-import { useCookies } from 'react-cookie';
 
 import idbPromise from '../../providers/idb';
 import Drawer from './Drawer';
 import { AuthContext } from '../../providers/AuthProvider';
-import { NotifyContext } from '../../providers/NotifyProvider';
+import { NotificationContext } from '../../providers/NotificationProvider';
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -34,29 +33,29 @@ const useStyles = makeStyles((theme: Theme) => {
         display: 'block',
       },
     },
-    search: {
-      position: 'relative',
-      borderRadius: theme.shape.borderRadius,
-      backgroundColor: fade(theme.palette.common.white, 0.15),
-      '&:hover': {
-        backgroundColor: fade(theme.palette.common.white, 0.25),
-      },
-      marginLeft: 0,
-      width: '100%',
-      [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing(1),
-        width: 'auto',
-      },
-    },
-    searchIcon: {
-      padding: theme.spacing(0, 2),
-      height: '100%',
-      position: 'absolute',
-      pointerEvents: 'none',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
+    // search: {
+    //   position: 'relative',
+    //   borderRadius: theme.shape.borderRadius,
+    //   backgroundColor: fade(theme.palette.common.white, 0.15),
+    //   '&:hover': {
+    //     backgroundColor: fade(theme.palette.common.white, 0.25),
+    //   },
+    //   marginLeft: 0,
+    //   width: '100%',
+    //   [theme.breakpoints.up('sm')]: {
+    //     marginLeft: theme.spacing(1),
+    //     width: 'auto',
+    //   },
+    // },
+    // searchIcon: {
+    //   padding: theme.spacing(0, 2),
+    //   height: '100%',
+    //   position: 'absolute',
+    //   pointerEvents: 'none',
+    //   display: 'flex',
+    //   alignItems: 'center',
+    //   justifyContent: 'center',
+    // },
     inputRoot: {
       color: 'inherit',
     },
@@ -97,6 +96,7 @@ const emptyUserData = {
 };
 
 export default function AppBar(props: any): JSX.Element {
+  const { consented }: { consented: boolean } = props;
   const { searchParams } = new URL(window.location.href);
   const code = searchParams.get('code');
   const state = searchParams.get('state');
@@ -104,8 +104,7 @@ export default function AppBar(props: any): JSX.Element {
 
   const classes = useStyles();
   const authProvider = useContext(AuthContext);
-  const { notify } = useContext(NotifyContext);
-
+  const { notify } = useContext(NotificationContext);
   const [error, setError] = useState<string | boolean>();
   const [userProfile, setUserProfile] = useState<UserData>(emptyUserData);
   const [expanded, setExpanded] = useState({
@@ -125,7 +124,7 @@ export default function AppBar(props: any): JSX.Element {
     if (oAuthError) {
       setError(oAuthError);
     }
-  }, [error, oAuthError])
+  }, [error, oAuthError]);
 
   useEffect(() => {
     if (authProvider.checkAuth() && !userProfile.displayImage) {
@@ -206,7 +205,7 @@ export default function AppBar(props: any): JSX.Element {
           <Typography className={classes.title} variant='h6' noWrap>
             wattry
           </Typography>
-          <div className={classes.search}>
+          {/* <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
@@ -218,8 +217,10 @@ export default function AppBar(props: any): JSX.Element {
               }}
               inputProps={{ 'aria-label': 'search' }}
             />
-          </div>
-          <Tooltip title="Open wattry's GitHub" TransitionComponent={Zoom}>
+          </div> */}
+          <Tooltip
+            title={<Typography variant='body1'>Open wattry's GitHub</Typography>}
+            TransitionComponent={Zoom}>
             <IconButton
               aria-label="Open wattry's GitHub"
               aria-controls='menu-appbar'
@@ -230,7 +231,9 @@ export default function AppBar(props: any): JSX.Element {
               <GitHub />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Open wattry's(@TheITGuyRy) Twitter" TransitionComponent={Zoom}>
+          <Tooltip
+            title={<Typography variant='body1'>Open wattry's(@TheITGuyRy) Twitter</Typography>}
+            TransitionComponent={Zoom}>
             <IconButton
               aria-label="Open wattry's(@TheITGuyRy) Twitter"
               aria-controls='menu-appbar'
@@ -241,7 +244,10 @@ export default function AppBar(props: any): JSX.Element {
               <Twitter />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Open wattry's LinkedIn page" TransitionComponent={Zoom}>
+          <Tooltip
+            title={<Typography variant='body1'>Open wattry's LinkedIn page</Typography>}
+            placement='left'
+            TransitionComponent={Zoom}>
             <IconButton
               aria-label="Open wattry's LinkedIn page"
               aria-controls='menu-appbar'
@@ -254,20 +260,32 @@ export default function AppBar(props: any): JSX.Element {
           </Tooltip>
           {!userProfile.displayImage ? (
             <Tooltip
-              title='Use LinkedIn to request a resume'
+              title={
+                <Typography variant='body1'>
+                  {consented
+                    ? 'Use LinkedIn to request a resume'
+                    : 'Cookies are declined please reload the page and accept to login.'}
+                </Typography>
+              }
               placement='left'
               TransitionComponent={Zoom}>
-              <IconButton
-                aria-label='Use LinkedIn to request a resume'
-                aria-controls='menu-appbar'
-                aria-haspopup='true'
-                onClick={handleLogin}
-                color='inherit'>
-                <AccountCircle />
-              </IconButton>
+              <div>
+                <IconButton
+                  aria-label='Use LinkedIn to request a resume'
+                  aria-controls='menu-appbar'
+                  aria-haspopup='true'
+                  onClick={handleLogin}
+                  disabled={consented ? false : true}
+                  color='inherit'>
+                  <AccountCircle />
+                </IconButton>
+              </div>
             </Tooltip>
           ) : (
-            <Tooltip placement='left' title='Logout of LinkedIn' TransitionComponent={Zoom}>
+            <Tooltip
+              placement='left'
+              title={<Typography variant='body1'>Logout of LinkedIn</Typography>}
+              TransitionComponent={Zoom}>
               <IconButton
                 aria-label='Logout of LinkedIn'
                 aria-controls='menu-appbar'

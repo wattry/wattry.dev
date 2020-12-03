@@ -3,7 +3,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
-import { NotifyContext } from '../../providers/NotifyProvider';
+import { NotificationContext } from '../../providers/NotificationProvider';
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant='filled' {...props} />;
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export default function Notification() {
-  const { close, state } = useContext(NotifyContext);
+  const { close, state } = useContext(NotificationContext);
   const classes = useStyles();
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
