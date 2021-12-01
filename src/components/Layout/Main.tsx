@@ -19,8 +19,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     content: {
       marginBottom: theme.spacing(2),
-      marginTop: theme.spacing(1),
-      paddingRight: theme.spacing(1),
+      marginTop: theme.spacing(2),
+      // paddingRight: theme.spacing(1),
       width: '100%',
       '& h2': {
         marginBottom: theme.spacing(2),
@@ -72,7 +72,7 @@ function ScrollTop(props: { children: any }) {
 
   return (
     <Zoom in={trigger}>
-      <div onClick={handleClick} role='presentation' className={classes.backToTop}>
+      <div onClick={handleClick} role='presentation' className={classes.backToTop} style={{ zIndex: 10000 }}>
         {children}
       </div>
     </Zoom>

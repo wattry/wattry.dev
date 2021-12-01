@@ -30,7 +30,7 @@ export default function Header(props: any): JSX.Element {
         Explore
       </Typography>
       <Typography variant='h3' component="h2" >
-        Ryan Wattrus
+        wattry
       </Typography>
     </header>
   );

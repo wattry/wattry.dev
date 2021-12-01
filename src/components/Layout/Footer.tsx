@@ -18,16 +18,15 @@ export default function Footer(props: any): JSX.Element {
 
   return (
     <footer className={classes.root}>
-      <div>
-        <span>
-          <Typography color='textPrimary'>&copy; Ryan Wattrus</Typography>
-          <Link
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Typography color='textPrimary'>&copy; wattry</Typography>
+        <Link
+            style={{ marginLeft: '5rem' }}
             color='textPrimary'
             target='#'
             href='https://www.privacypolicies.com/live/f9b3ac4f-ad26-4312-8263-f0e238124610'>
             Privacy Policy
           </Link>
-        </span>
       </div>
     </footer>
   );
