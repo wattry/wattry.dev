@@ -5,7 +5,7 @@ const theme: UserTheme = {
     createMuiTheme({
       palette: {
         primary: {
-          main: '#303030',
+          main: '#303030'
         },
         secondary: {
           main: '#93cbd8',

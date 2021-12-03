@@ -12,7 +12,6 @@ import {
   CookiePolicy,
 } from './components/layout';
 import theme from './styles/theme';
-import Router from './Routes';
 import { AuthProvider, NotificationProvider, authProvider } from './providers';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -26,7 +25,6 @@ function App() {
     <AuthProvider>
       <NotificationProvider>
         <ThemeProvider theme={theme.dark}>
-          <Router />
           <AppBar consented={consented} />
           <Background />
           <Header />
