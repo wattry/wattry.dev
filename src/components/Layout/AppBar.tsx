@@ -4,7 +4,6 @@ import { Toolbar, IconButton, Typography, InputBase, Tooltip, Zoom } from '@mate
 import {
   GitHub,
   LinkedIn,
-  Twitter,
   AccountCircle,
   PowerSettingsNew,
   Menu as MenuIcon,
@@ -232,19 +231,6 @@ export default function AppBar(props: any): JSX.Element {
             </IconButton>
           </Tooltip>
           <Tooltip
-            title={<Typography variant='body1'>Open wattry's(@TheITGuyRy) Twitter</Typography>}
-            TransitionComponent={Zoom}>
-            <IconButton
-              aria-label="Open wattry's(@TheITGuyRy) Twitter"
-              aria-controls='menu-appbar'
-              aria-haspopup='true'
-              href='https://twitter.com/TheITGuyRy'
-              target='_blank'
-              color='inherit'>
-              <Twitter />
-            </IconButton>
-          </Tooltip>
-          <Tooltip
             title={<Typography variant='body1'>Open wattry's LinkedIn page</Typography>}
             placement='left'
             TransitionComponent={Zoom}>
@@ -258,7 +244,7 @@ export default function AppBar(props: any): JSX.Element {
               <LinkedIn />
             </IconButton>
           </Tooltip>
-          {!userProfile.displayImage ? (
+          {/* {!userProfile.displayImage ? (
             <Tooltip
               title={
                 <Typography variant='body1'>
@@ -301,7 +287,7 @@ export default function AppBar(props: any): JSX.Element {
                 <PowerSettingsNew />
               </IconButton>
             </Tooltip>
-          )}
+          )} */}
         </Toolbar>
       </DefaultAppBar>
       <Drawer toggleDrawer={toggleDrawer} expanded={expanded} />
