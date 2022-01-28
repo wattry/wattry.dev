@@ -238,7 +238,7 @@ export default function AppBar(props: any): JSX.Element {
               aria-label="Open wattry's LinkedIn page"
               aria-controls='menu-appbar'
               aria-haspopup='true'
-              href='https://www.linkedin.com/in/ryan-wattrus'
+              href='https://linkedin.com/in/wattry'
               target='_blank'
               color='inherit'>
               <LinkedIn />
