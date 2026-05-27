@@ -1,0 +1,61 @@
+graph TB
+    subgraph LAB["workos-demo"]
+        W1[Auth0 example<br/>Dec 2025]
+        W2[FGA + OpenAPI + route analyzer<br/>Jan 2-12 2026]
+        W3[Terraform Auth0 prototype<br/>Jan 17-21 2026]
+        W4[OpenTofu + M2M + grants<br/>May 10-16 2026]
+    end
+
+    subgraph IAC["auth0-terraform (production IaC)"]
+        T1[Dev tenant bootstrap<br/>Jan 24 2026]
+        T2[Actions + tests + CI<br/>Jan 25-26 2026]
+        T3[Stage+prod imports<br/>Jan 28-29 2026]
+    end
+
+    subgraph API["anza-app-api (platform)"]
+        R0[Auth middleware shim<br/>Feb 2026]
+        R1[PLAT-528 Remove role-based<br/>Mar 2026]
+        R2[PLAT-590 Shadow → DEV enforce<br/>Mar 2026]
+        R3[PLAT-722/807 Action routing + JSON roles<br/>Apr 2026]
+        R4[PLAT-836 Shadow OFF stage+prod<br/>Apr 2026]
+        R5[PLAT-865/866 M2M middleware<br/>May 2026]
+        R6[PLAT-869/870 Self-signup<br/>May 2026]
+        R7[PLAT-874+ Delete legacy middleware<br/>May 2026]
+    end
+
+    subgraph SHEETS["gsheet-sdk (SME tooling)"]
+        G1[Solar+storage SDKs<br/>May 2025]
+        G2[OpenAPI autogen<br/>Jun 2025]
+        G3[Sidebar + CLI<br/>May-Jun 2025]
+    end
+
+    subgraph STORAGE["Storage ingestion + snapshots (anza-app-api)"]
+        S1[Ingestion v2 rewrite<br/>Jul 2025]
+        S2[Snapshot/diff rebuild<br/>Oct-Dec 2025]
+        S3[Horizon UI APIs<br/>Nov 2025]
+    end
+
+    W1 --> W2
+    W2 --> W3
+    W3 -->|+3 days| T1
+    T1 --> T2 --> T3
+    W2 -.FGA patterns.-> R1
+    T3 --> R3
+    T3 --> R4
+    W4 -.parallel R&D.-> R5
+    R0 --> R1 --> R2 --> R4
+    R4 --> R7
+    R5 --> R7
+    R6 --> R7
+    G1 --> G2
+    G1 --> G3
+    G2 -.OpenAPI pattern.-> W2
+    S1 --> S2 --> S3
+
+    style LAB fill:#fcf,stroke:#909
+    style IAC fill:#9cf,stroke:#069
+    style API fill:#fec,stroke:#960
+    style SHEETS fill:#cfc,stroke:#090
+    style STORAGE fill:#ffc,stroke:#990
+    style R7 fill:#9f9,stroke:#060,stroke-width:3px
+    style R4 fill:#f99,stroke:#900,stroke-width:3px

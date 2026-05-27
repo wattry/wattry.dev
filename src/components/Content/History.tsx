@@ -1,22 +1,17 @@
-import React, { Fragment } from 'react';
-import { Typography } from '@material-ui/core';
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import ArrowForwardIos from '@material-ui/icons/ArrowForwardIos';
+import { Fragment } from 'react';
+import { Typography } from '@mui/material';
+import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos';
+import { styled } from '@mui/material/styles';
 
 import { History } from '../../interfaces/history.interface';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
-  achievements: {
-    '& h4': {
-      marginBottom: theme.spacing(1),
-    },
+const Achievements = styled('div')(({ theme }) => ({
+  '& h4': {
+    marginBottom: theme.spacing(1),
   },
 }));
 
-export default ({ history }: { history: History[] }): JSX.Element => {
-  const classes = useStyles();
-
+const HistoryComponent = ({ history }: { history: History[] }): JSX.Element => {
   return (
     <Fragment>
       {history.map(
@@ -49,7 +44,7 @@ export default ({ history }: { history: History[] }): JSX.Element => {
                 ))}
               </ul>
               {keyAchievements ? (
-                <div className={classes.achievements}>
+                <Achievements>
                   <Typography color='textPrimary' variant='h5' component='h4'>
                     Key Achievements
                   </Typography>
@@ -62,7 +57,7 @@ export default ({ history }: { history: History[] }): JSX.Element => {
                       </div>
                     );
                   })}
-                </div>
+                </Achievements>
               ) : null}
             </Fragment>
           );
@@ -71,3 +66,5 @@ export default ({ history }: { history: History[] }): JSX.Element => {
     </Fragment>
   );
 };
+
+export default HistoryComponent;

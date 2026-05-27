@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { ThemeProvider, Theme, makeStyles } from '@material-ui/core';
+import { useState } from 'react';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 
 import './App.css';
 import {
@@ -14,17 +15,14 @@ import {
 import theme from './styles/theme';
 import { AuthProvider, NotificationProvider, authProvider } from './providers';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
-}));
-
 function App() {
   const [consented, setConsented] = useState(authProvider.checkCookieConsent());
-  // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
   return (
     <AuthProvider>
       <NotificationProvider>
-        <ThemeProvider theme={theme.dark}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
           <AppBar consented={consented} />
           <Background />
           <Header />

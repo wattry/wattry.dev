@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react';
-import { AlertProps } from '@material-ui/lab/Alert';
+import { AlertProps } from '@mui/material/Alert';
 
 interface NotifyProps {
   open?: boolean;

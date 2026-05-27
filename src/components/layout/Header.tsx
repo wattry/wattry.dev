@@ -1,37 +1,24 @@
-import React from 'react';
-import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      position: 'relative',
-      height: '80vh',
-      textAlign: 'center',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexDirection: 'column',
-      marginBottom: theme.spacing(20),
-    },
-    h1: {
-      letterSpacing: '3vw',
-      lineHeight: '1.2',
-    },
-  }),
-);
+const Root = styled('header')(({ theme }) => ({
+  position: 'relative',
+  height: '80vh',
+  textAlign: 'center',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexDirection: 'column',
+  marginBottom: theme.spacing(20),
+}));
 
-export default function Header(props: any): JSX.Element {
-  const classes = useStyles(props);
-
+export default function Header(): JSX.Element {
   return (
-    <header className={classes.root}>
-      <Typography variant='h1'>
-        Explore
-      </Typography>
-      <Typography variant='h3' component="h2" >
+    <Root>
+      <Typography variant='h1'>Explore</Typography>
+      <Typography variant='h3' component='h2'>
         wattry
       </Typography>
-    </header>
+    </Root>
   );
 }

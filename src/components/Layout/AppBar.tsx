@@ -1,78 +1,38 @@
-import React, { SyntheticEvent, useEffect, useState, useContext } from 'react';
-import { createStyles, fade, makeStyles, Theme } from '@material-ui/core/styles';
-import { Toolbar, IconButton, Typography, InputBase, Tooltip, Zoom } from '@material-ui/core';
+import React, { useEffect, useState, useContext } from 'react';
+import { Toolbar, IconButton, Typography, Tooltip, Zoom, AppBar as DefaultAppBar } from '@mui/material';
 import {
   GitHub,
   LinkedIn,
-  AccountCircle,
-  PowerSettingsNew,
   Menu as MenuIcon,
-  Search as SearchIcon,
-} from '@material-ui/icons';
-import { AppBar as DefaultAppBar } from '@material-ui/core';
+} from '@mui/icons-material';
+import { styled } from '@mui/material/styles';
 
 import idbPromise from '../../providers/idb';
 import Drawer from './Drawer';
 import { AuthContext } from '../../providers/AuthProvider';
 import { NotificationContext } from '../../providers/NotificationProvider';
 
-const useStyles = makeStyles((theme: Theme) => {
-  return createStyles({
-    root: {
-      flexGrow: 1,
-      backgroundColor: theme.palette.background.default,
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-    title: {
-      flexGrow: 1,
-      display: 'none',
-      [theme.breakpoints.up('sm')]: {
-        display: 'block',
-      },
-    },
-    // search: {
-    //   position: 'relative',
-    //   borderRadius: theme.shape.borderRadius,
-    //   backgroundColor: fade(theme.palette.common.white, 0.15),
-    //   '&:hover': {
-    //     backgroundColor: fade(theme.palette.common.white, 0.25),
-    //   },
-    //   marginLeft: 0,
-    //   width: '100%',
-    //   [theme.breakpoints.up('sm')]: {
-    //     marginLeft: theme.spacing(1),
-    //     width: 'auto',
-    //   },
-    // },
-    // searchIcon: {
-    //   padding: theme.spacing(0, 2),
-    //   height: '100%',
-    //   position: 'absolute',
-    //   pointerEvents: 'none',
-    //   display: 'flex',
-    //   alignItems: 'center',
-    //   justifyContent: 'center',
-    // },
-    inputRoot: {
-      color: 'inherit',
-    },
-    inputInput: {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-      transition: theme.transitions.create('width'),
-      width: '100%',
-      [theme.breakpoints.up('sm')]: {
-        width: '12ch',
-        '&:focus': {
-          width: '20ch',
-        },
-      },
-    },
-  });
-});
+const Root = styled('div')(({ theme }) => ({
+  flexGrow: 1,
+  backgroundColor: theme.palette.background.default,
+}));
+
+const StyledAppBar = styled(DefaultAppBar)(({ theme }) => ({
+  flexGrow: 1,
+  backgroundColor: theme.palette.background.default,
+}));
+
+const MenuButton = styled(IconButton)(({ theme }) => ({
+  marginRight: theme.spacing(2),
+}));
+
+const Title = styled(Typography)(({ theme }) => ({
+  flexGrow: 1,
+  display: 'none',
+  [theme.breakpoints.up('sm')]: {
+    display: 'block',
+  },
+}));
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
@@ -101,7 +61,6 @@ export default function AppBar(props: any): JSX.Element {
   const state = searchParams.get('state');
   const oAuthError = searchParams.get('error');
 
-  const classes = useStyles();
   const authProvider = useContext(AuthContext);
   const { notify } = useContext(NotificationContext);
   const [error, setError] = useState<string | boolean>();
@@ -190,33 +149,19 @@ export default function AppBar(props: any): JSX.Element {
   }
 
   return (
-    <div className={classes.root}>
-      <DefaultAppBar id='top-anchor' position='relative' className={classes.root}>
+    <Root>
+      <StyledAppBar id='top-anchor' position='relative'>
         <Toolbar>
-          <IconButton
+          <MenuButton
             edge='start'
-            className={classes.menuButton}
             color='inherit'
             aria-label='open drawer'
             onClick={handleClick}>
             <MenuIcon />
-          </IconButton>
-          <Typography className={classes.title} variant='h6' noWrap>
+          </MenuButton>
+          <Title variant='h6' noWrap>
             wattry
-          </Typography>
-          {/* <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder='Search…'
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div> */}
+          </Title>
           <Tooltip
             title={<Typography variant='body1'>Open wattry's GitHub</Typography>}
             TransitionComponent={Zoom}>
@@ -244,53 +189,9 @@ export default function AppBar(props: any): JSX.Element {
               <LinkedIn />
             </IconButton>
           </Tooltip>
-          {/* {!userProfile.displayImage ? (
-            <Tooltip
-              title={
-                <Typography variant='body1'>
-                  {consented
-                    ? 'Use LinkedIn to request a resume'
-                    : 'Cookies are declined please reload the page and accept to login.'}
-                </Typography>
-              }
-              placement='left'
-              TransitionComponent={Zoom}>
-              <div>
-                <IconButton
-                  aria-label='Use LinkedIn to request a resume'
-                  aria-controls='menu-appbar'
-                  aria-haspopup='true'
-                  onClick={handleLogin}
-                  disabled={consented ? false : true}
-                  color='inherit'>
-                  <AccountCircle />
-                </IconButton>
-              </div>
-            </Tooltip>
-          ) : (
-            <Tooltip
-              placement='left'
-              title={<Typography variant='body1'>Logout of LinkedIn</Typography>}
-              TransitionComponent={Zoom}>
-              <IconButton
-                aria-label='Logout of LinkedIn'
-                aria-controls='menu-appbar'
-                aria-haspopup='true'
-                size='medium'
-                style={{
-                  background: `url(${userProfile.displayImage})`,
-                  height: '4rem',
-                  width: '4rem',
-                }}
-                onClick={handleLogout}
-                color='inherit'>
-                <PowerSettingsNew />
-              </IconButton>
-            </Tooltip>
-          )} */}
         </Toolbar>
-      </DefaultAppBar>
+      </StyledAppBar>
       <Drawer toggleDrawer={toggleDrawer} expanded={expanded} />
-    </div>
+    </Root>
   );
 }

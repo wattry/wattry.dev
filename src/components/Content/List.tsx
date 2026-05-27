@@ -1,5 +1,4 @@
-import React from 'react';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 
 export default function List({ paragraphs }: { paragraphs: string[] }): JSX.Element {
   return (

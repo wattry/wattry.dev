@@ -7,7 +7,7 @@ import {
   History as HistoryIcon,
   Alarm,
   School,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 import { Menu } from './interfaces/menu.interface';
 import { History } from './interfaces/history.interface';
