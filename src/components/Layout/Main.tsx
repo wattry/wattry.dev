@@ -4,7 +4,7 @@ import { KeyboardArrowUp as KeyboardArrowUpIcon } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 
 import menuItems from '../../menuItems';
-import Section from '../content/Section';
+import Section from '../Content/Section';
 import { Menu, SubMenu } from '../../interfaces/menu.interface';
 
 const MainBox = styled('div')(({ theme }) => ({

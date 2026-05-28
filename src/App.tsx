@@ -11,7 +11,7 @@ import {
   Background,
   Notification,
   CookiePolicy,
-} from './components/layout';
+} from './components/Layout';
 import theme from './styles/theme';
 import { AuthProvider, NotificationProvider, authProvider } from './providers';
 
