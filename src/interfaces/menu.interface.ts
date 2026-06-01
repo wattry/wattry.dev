@@ -1,9 +1,9 @@
-import { History } from './history.interface';
+import { JSX } from 'react';
 
 export interface SubMenu {
   title: string;
   content: any;
-  component: (content: any) => JSX.Element;
+  component?: (content: any) => JSX.Element;
   icon: JSX.Element;
 }
 

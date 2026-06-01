@@ -18,6 +18,3 @@ export * from './Notification';
 
 export { default as Main } from './Main';
 export * from './Main';
-
-export { default as CookiePolicy } from './CookiePolicy';
-export * from './CookiePolicy';

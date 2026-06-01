@@ -16,12 +16,9 @@
     "idb": "^8.0.3",
     "react": "^19.2.6",
     "react-cookie": "^8.1.2",
-    "react-cookie-consent": "^10.0.1",
     "react-dom": "^19.2.6",
     "react-router-dom": "^7.15.1",
-    "react-scripts": "^5.0.1",
-    "react-scroll": "^1.9.3",
-    "uuid": "^14.0.0"
+    "react-scroll": "^1.9.3"
   },
   "devDependencies": {
     "@types/node": "^24.12.4",
@@ -29,20 +26,16 @@
     "@types/react-dom": "^19.2.3",
     "@types/react-router-dom": "^5.3.3",
     "@types/react-scroll": "^1.8.10",
-    "@types/uuid": "^11.0.0",
     "@vitejs/plugin-react": "^6.0.2",
     "typescript": "^6.0.3",
     "vite": "^8.0.14"
   },
   "scripts": {
-    "start": "HTTPS=true PORT=3000 HOST=wattry.dev.local react-scripts start",
+    "start": "PORT=3000 vite",
     "dev": "vite",
     "prebuild": "rm -rf docs build",
-    "build": "react-scripts build",
+    "build": "vite build",
     "postbuild": "mv ./build ./docs && cp CNAME ./docs",
-    "test": "react-scripts test",
-    "test:watch": "react-scripts test --watch",
-    "eject": "react-scripts eject",
     "tc": "npx tsc --noEmit"
   },
   "proxy": "http://localhost:3001",

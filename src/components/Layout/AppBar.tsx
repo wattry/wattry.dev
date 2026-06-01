@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, JSX } from 'react';
 import { Toolbar, IconButton, Typography, Tooltip, Zoom, AppBar as DefaultAppBar } from '@mui/material';
 import {
   GitHub,
@@ -54,8 +54,9 @@ const emptyUserData = {
   displayImage: '',
 };
 
-export default function AppBar(props: any): JSX.Element {
-  const { consented }: { consented: boolean } = props;
+interface AppBarProps { consented: boolean };
+
+export default function AppBar(): JSX.Element {
   const { searchParams } = new URL(window.location.href);
   const code = searchParams.get('code');
   const state = searchParams.get('state');
@@ -164,7 +165,7 @@ export default function AppBar(props: any): JSX.Element {
           </Title>
           <Tooltip
             title={<Typography variant='body1'>Open wattry's GitHub</Typography>}
-            TransitionComponent={Zoom}>
+          >
             <IconButton
               aria-label="Open wattry's GitHub"
               aria-controls='menu-appbar'
@@ -178,7 +179,7 @@ export default function AppBar(props: any): JSX.Element {
           <Tooltip
             title={<Typography variant='body1'>Open wattry's LinkedIn page</Typography>}
             placement='left'
-            TransitionComponent={Zoom}>
+            >
             <IconButton
               aria-label="Open wattry's LinkedIn page"
               aria-controls='menu-appbar'

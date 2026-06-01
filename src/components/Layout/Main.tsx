@@ -1,11 +1,7 @@
-import React from 'react';
-import { Divider, Zoom, useScrollTrigger, Fab } from '@mui/material';
+import { JSX } from 'react';
+import { Zoom, useScrollTrigger, Fab } from '@mui/material';
 import { KeyboardArrowUp as KeyboardArrowUpIcon } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
-
-import menuItems from '../../menuItems';
-import Section from '../Content/Section';
-import { Menu, SubMenu } from '../../interfaces/menu.interface';
 
 const MainBox = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -79,22 +75,6 @@ export default function Main(props: any): JSX.Element {
   return (
     <main>
       <MainBox>
-        <Content>
-          {menuItems.map(({ title, icon, content, component, subMenus }: Menu, index) => (
-            <SectionBox key={index}>
-              <Section title={title} icon={icon} content={content} component={component} />
-              {subMenus?.map(
-                ({ title, icon, content, component }: SubMenu, index: number, array: SubMenu[]) => (
-                  <SubMenuBox key={index}>
-                    <Section title={title} icon={icon} content={content} component={component} />
-                    {index !== array.length - 1 ? <Divider component='li' /> : null}
-                  </SubMenuBox>
-                ),
-              )}
-              <Divider component='li' />
-            </SectionBox>
-          ))}
-        </Content>
         <ScrollTop {...props}>
           <Fab color='default' size='large' aria-label='scroll back to top'>
             <KeyboardArrowUpIcon />

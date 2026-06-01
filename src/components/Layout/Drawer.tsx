@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Fragment, JSX } from 'react';
 import {
   ListItemButton,
   List,
@@ -78,7 +78,7 @@ export default function Drawer({
   return (
     <div>
       {(['left', 'right', 'top'] as Anchor[]).map((anchor) => (
-        <React.Fragment key={anchor}>
+        <Fragment key={anchor}>
           <SwipeableDrawer
             anchor={anchor}
             open={expanded[anchor]}
@@ -86,7 +86,7 @@ export default function Drawer({
             onOpen={toggleDrawer(anchor, true)}>
             {list(anchor)}
           </SwipeableDrawer>
-        </React.Fragment>
+        </Fragment>
       ))}
     </div>
   );

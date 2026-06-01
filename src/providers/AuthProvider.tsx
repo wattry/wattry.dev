@@ -1,6 +1,5 @@
-import React, { createContext } from 'react';
+import { createContext } from 'react';
 import axios from 'axios';
-import { v4 as uuid } from 'uuid';
 
 import idbPromise from './idb';
 export interface AuthResponse {
@@ -74,7 +73,7 @@ function oAuthRedirect(): void {
     client_id: VITE_CLIENT_ID,
     redirect_uri: `${VITE_REDIRECT_URL}`,
     scope: VITE_LINKEDIN_SCOPES,
-    state: uuid(),
+    state: crypto.randomUUID(),
   };
 
   localStorage.setItem(oAuthParams.state, oAuthParams.state);
@@ -132,9 +131,6 @@ export const authProvider = {
   },
   checkAuth: (params?: any): boolean => {
     return document.cookie.includes('authenticated=true');
-  },
-  checkCookieConsent: (params?: any): boolean => {
-    return document.cookie.includes('consented=true');
   }
 };
 
