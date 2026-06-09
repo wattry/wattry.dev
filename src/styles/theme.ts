@@ -5,30 +5,57 @@ const theme = responsiveFontSizes(
     palette: {
       mode: 'dark',
       primary: {
-        main: '#303030',
+        main: '#F5E13C',
       },
       secondary: {
-        main: '#93cbd8',
+        main: '#2E6BFF',
       },
     },
     typography: {
-      fontFamily: "'Inter', 'Roboto','Helvetica Neue','Arial','sans-serif'",
+      fontFamily: "'Space Grotesk', 'Inter', 'Roboto', 'Helvetica Neue', 'Arial', sans-serif",
       h1: {
-        fontFamily: "'Inter'",
+        fontFamily: "'Space Grotesk'",
         color: 'white',
         textTransform: 'uppercase',
         letterSpacing: '1.5vw',
         lineHeight: 1.2,
       },
       h2: {
-        fontFamily: "'Inter'",
+        fontFamily: "'Space Grotesk'",
         color: 'white',
         textTransform: 'uppercase',
       },
       h3: {
-        fontFamily: "'Inter'",
+        fontFamily: "'Space Grotesk'",
         color: 'white',
         textTransform: 'uppercase',
+      },
+    },
+    components: {
+      MuiCssBaseline: {
+        styleOverrides: `
+          @font-face {
+            font-family: 'Space Grotesk';
+            font-style: normal;
+            font-display: swap;
+            font-weight: 400;
+            src: url(/brand/fonts/SpaceGrotesk-Regular.woff2) format('woff2');
+          }
+          @font-face {
+            font-family: 'Space Grotesk';
+            font-style: normal;
+            font-display: swap;
+            font-weight: 500;
+            src: url(/brand/fonts/SpaceGrotesk-Medium.woff2) format('woff2');
+          }
+          @font-face {
+            font-family: 'Space Grotesk';
+            font-style: normal;
+            font-display: swap;
+            font-weight: 700;
+            src: url(/brand/fonts/SpaceGrotesk-Bold.woff2) format('woff2');
+          }
+        `,
       },
     },
   }),

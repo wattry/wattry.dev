@@ -10,33 +10,6 @@ const MainBox = styled('div')(({ theme }) => ({
   display: 'flex',
 }));
 
-const Content = styled('div')(({ theme }) => ({
-  marginBottom: theme.spacing(2),
-  marginTop: theme.spacing(2),
-  width: '100%',
-  '& h2': {
-    marginBottom: theme.spacing(2),
-  },
-  '& svg': {
-    marginRight: theme.spacing(1),
-  },
-}));
-
-const SectionBox = styled('div')(({ theme }) => ({
-  '& p': {
-    marginRight: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  },
-  '& li': {
-    marginBottom: theme.spacing(2),
-    listStyleType: 'none',
-  },
-}));
-
-const SubMenuBox = styled('div')(({ theme }) => ({
-  paddingLeft: theme.spacing(1),
-}));
-
 const BackToTop = styled('div')(({ theme }) => ({
   position: 'fixed',
   bottom: theme.spacing(2),

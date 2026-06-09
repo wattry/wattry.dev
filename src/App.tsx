@@ -1,9 +1,9 @@
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import { TerminalContextProvider } from 'react-terminal';
 
 import './App.css';
 import {
-  AppBar,
   Main,
   Header,
   Footer,
@@ -11,7 +11,9 @@ import {
   Notification
 } from './components/Layout';
 import theme from './styles/theme';
-import { AuthProvider, NotificationProvider, authProvider } from './providers';
+import { AuthProvider, NotificationProvider } from './providers';
+import Terminal from './components/Layout/Terminal';
+
 
 function App() {
   return (
@@ -19,11 +21,13 @@ function App() {
       <NotificationProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <AppBar />
           <Background />
           <Header />
           <Notification />
           <Main />
+          <TerminalContextProvider>
+            <Terminal />
+          </TerminalContextProvider>
           <Footer />
         </ThemeProvider>
       </NotificationProvider>

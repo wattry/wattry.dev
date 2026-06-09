@@ -11,6 +11,7 @@
     "@mui/icons-material": "^9.0.1",
     "@mui/lab": "9.0.0-beta.3",
     "@mui/material": "^9.0.1",
+    "@posthog/react": "^1.10.0",
     "axios": "^1.16.1",
     "fontsource-roboto": "^4.0.0",
     "idb": "^8.0.3",
@@ -18,7 +19,8 @@
     "react-cookie": "^8.1.2",
     "react-dom": "^19.2.6",
     "react-router-dom": "^7.15.1",
-    "react-scroll": "^1.9.3"
+    "react-scroll": "^1.9.3",
+    "react-terminal": "^1.4.5"
   },
   "devDependencies": {
     "@types/node": "^24.12.4",
@@ -35,7 +37,7 @@
     "dev": "vite",
     "prebuild": "rm -rf docs build",
     "build": "vite build",
-    "postbuild": "mv ./build ./docs && cp CNAME ./docs",
+    "preview": "vite preview",
     "tc": "npx tsc --noEmit"
   },
   "proxy": "http://localhost:3001",

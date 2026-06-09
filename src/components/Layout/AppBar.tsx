@@ -8,7 +8,6 @@ import {
 import { styled } from '@mui/material/styles';
 
 import idbPromise from '../../providers/idb';
-import Drawer from './Drawer';
 import { AuthContext } from '../../providers/AuthProvider';
 import { NotificationContext } from '../../providers/NotificationProvider';
 
@@ -192,7 +191,6 @@ export default function AppBar(): JSX.Element {
           </Tooltip>
         </Toolbar>
       </StyledAppBar>
-      <Drawer toggleDrawer={toggleDrawer} expanded={expanded} />
     </Root>
   );
 }

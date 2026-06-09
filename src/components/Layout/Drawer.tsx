@@ -9,7 +9,6 @@ import {
 import { styled } from '@mui/material/styles';
 import { Link, scroller } from 'react-scroll';
 
-import menuItems from '../../menuItems';
 import { Menu, SubMenu } from '../../interfaces/menu.interface';
 
 const NestedListItemButton = styled(ListItemButton)(({ theme }) => ({

@@ -9,6 +9,7 @@ const Video = styled('video')({
   position: 'fixed',
   top: 0,
   left: 0,
+  zIndex: -1,
 });
 
 export default function Background(props: any) {
