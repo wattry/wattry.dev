@@ -1,6 +1,5 @@
-import React, { createContext } from 'react';
+import { createContext } from 'react';
 import axios from 'axios';
-import { v4 as uuid } from 'uuid';
 
 import idbPromise from './idb';
 export interface AuthResponse {
@@ -21,60 +20,60 @@ export interface LoginParams{
 
 function oAuthRedirect(): void {
   const {
-    REACT_APP_HOST,
-    REACT_APP_REDIRECT_URL,
-    REACT_APP_LINKEDIN_SCOPES,
-    REACT_APP_LINKEDIN_URL,
-    REACT_APP_RESPONSE_TYPE,
-    REACT_APP_CLIENT_ID,
-    REACT_APP_API
+    VITE_HOST,
+    VITE_REDIRECT_URL,
+    VITE_LINKEDIN_SCOPES,
+    VITE_LINKEDIN_URL,
+    VITE_RESPONSE_TYPE,
+    VITE_CLIENT_ID,
+    VITE_API
   } = process.env;
 
   if (
     process.env.NODE_ENV === 'development' &&
-    (!REACT_APP_HOST ||
-      !REACT_APP_REDIRECT_URL ||
-      !REACT_APP_LINKEDIN_SCOPES ||
-      !REACT_APP_RESPONSE_TYPE ||
-      !REACT_APP_CLIENT_ID ||
-      !REACT_APP_LINKEDIN_URL ||
-      !REACT_APP_API)
+    (!VITE_HOST ||
+      !VITE_REDIRECT_URL ||
+      !VITE_LINKEDIN_SCOPES ||
+      !VITE_RESPONSE_TYPE ||
+      !VITE_CLIENT_ID ||
+      !VITE_LINKEDIN_URL ||
+      !VITE_API)
   ) {
     console.log(
-      'REACT_APP_HOST',
-      REACT_APP_HOST !== undefined,
-      'REACT_APP_REDIRECT_URL',
-      REACT_APP_REDIRECT_URL !== undefined,
-      'REACT_APP_LINKEDIN_SCOPES',
-      REACT_APP_LINKEDIN_SCOPES !== undefined,
-      'REACT_APP_LINKEDIN_URL',
-      REACT_APP_LINKEDIN_URL !== undefined,
-      'REACT_APP_RESPONSE_TYPE',
-      REACT_APP_RESPONSE_TYPE !== undefined,
-      'REACT_APP_CLIENT_ID',
-      REACT_APP_CLIENT_ID !== undefined,
-      'REACT_APP_API',
-      REACT_APP_API !== undefined,
+      'VITE_HOST',
+      VITE_HOST !== undefined,
+      'VITE_REDIRECT_URL',
+      VITE_REDIRECT_URL !== undefined,
+      'VITE_LINKEDIN_SCOPES',
+      VITE_LINKEDIN_SCOPES !== undefined,
+      'VITE_LINKEDIN_URL',
+      VITE_LINKEDIN_URL !== undefined,
+      'VITE_RESPONSE_TYPE',
+      VITE_RESPONSE_TYPE !== undefined,
+      'VITE_CLIENT_ID',
+      VITE_CLIENT_ID !== undefined,
+      'VITE_API',
+      VITE_API !== undefined,
     );
   }
 
   if (
-    !REACT_APP_HOST ||
-    !REACT_APP_REDIRECT_URL ||
-    !REACT_APP_LINKEDIN_SCOPES ||
-    !REACT_APP_RESPONSE_TYPE ||
-    !REACT_APP_CLIENT_ID ||
-    !REACT_APP_LINKEDIN_URL
+    !VITE_HOST ||
+    !VITE_REDIRECT_URL ||
+    !VITE_LINKEDIN_SCOPES ||
+    !VITE_RESPONSE_TYPE ||
+    !VITE_CLIENT_ID ||
+    !VITE_LINKEDIN_URL
   ) {
     throw new Error('oAuth configured incorrectly');
   }
 
   const oAuthParams = {
-    response_type: REACT_APP_RESPONSE_TYPE,
-    client_id: REACT_APP_CLIENT_ID,
-    redirect_uri: `${REACT_APP_REDIRECT_URL}`,
-    scope: REACT_APP_LINKEDIN_SCOPES,
-    state: uuid(),
+    response_type: VITE_RESPONSE_TYPE,
+    client_id: VITE_CLIENT_ID,
+    redirect_uri: `${VITE_REDIRECT_URL}`,
+    scope: VITE_LINKEDIN_SCOPES,
+    state: crypto.randomUUID(),
   };
 
   localStorage.setItem(oAuthParams.state, oAuthParams.state);
@@ -87,11 +86,11 @@ function oAuthRedirect(): void {
       .join('&'),
   );
 
-  window.location.replace(`${REACT_APP_LINKEDIN_URL}/oauth/v2/authorization?${encoded}`);
+  window.location.replace(`${VITE_LINKEDIN_URL}/oauth/v2/authorization?${encoded}`);
 }
 
 const { post } = axios.create({
-  baseURL: process.env.REACT_APP_API,
+  baseURL: import.meta.env.VITE_API,
   withCredentials: true,
   timeout: 30000
 });
@@ -132,9 +131,6 @@ export const authProvider = {
   },
   checkAuth: (params?: any): boolean => {
     return document.cookie.includes('authenticated=true');
-  },
-  checkCookieConsent: (params?: any): boolean => {
-    return document.cookie.includes('consented=true');
   }
 };
 

@@ -1,0 +1,42 @@
+gantt
+    title wattry — 16mo cross-repo impact (Feb 2025 → May 2026)
+    dateFormat YYYY-MM-DD
+    axisFormat %b %Y
+
+    section anza-app-api
+    ITT storage pricing + DB tooling           :a1, 2025-02-07, 2025-03-31
+    Stor-755 notifications + schema 180        :a2, 2025-04-01, 2025-05-15
+    PLAT ingestion stabilization               :a3, 2025-06-01, 2025-06-30
+    Storage ingestion v2 rewrite               :crit, a4, 2025-07-01, 2025-07-31
+    Ingestion cleanup + BESS removal           :a5, 2025-08-01, 2025-08-31
+    Tooling modernization (ESM/ESLint9/Prettier10) :crit, a6, 2025-09-01, 2025-09-30
+    Snapshot/diff system rebuild               :crit, a7, 2025-10-01, 2025-12-15
+    Horizon UI APIs (PCS/sub-block/pricing)    :a9, 2025-11-01, 2025-11-30
+    Sentry upgrade + observability             :a8, 2025-12-15, 2025-12-31
+    QA endpoints + cleanup                     :a10, 2026-01-01, 2026-01-31
+    RBAC groundwork (middleware shim)          :a11, 2026-02-01, 2026-02-28
+    RBAC enforce DEV + role-purge (PLAT-528/590) :crit, a12, 2026-03-01, 2026-03-31
+    RBAC enforce stage/prod (PLAT-836)         :crit, a13, 2026-04-01, 2026-04-30
+    M2M + self-signup + legacy middleware purge :crit, a14, 2026-05-01, 2026-05-21
+    Node 24 LTS                                :a15, 2026-05-21, 2026-05-22
+
+    section gsheet-sdk
+    Bootstrap + solar/storage SDKs             :crit, g1, 2025-05-07, 2025-05-20
+    Sidebar v3 + CLI (init/clone)              :g2, 2025-05-21, 2025-05-26
+    Vitest + unit tests + husky                :g3, 2025-05-25, 2025-05-31
+    OpenAPI autogen + deploy-dev-watch         :crit, g4, 2025-06-02, 2025-06-09
+    getAll + sidebar polish                    :g5, 2025-06-09, 2025-06-27
+
+    section workos-demo (private R&D)
+    Auth0 example + middleware                 :w1, 2025-12-13, 2025-12-19
+    Workspaces + user assignment + roles       :w2, 2025-12-21, 2025-12-27
+    FGA + OpenAPI/zod + route analyzer         :crit, w3, 2026-01-02, 2026-01-12
+    Terraform Auth0 mgmt prototype             :crit, w4, 2026-01-17, 2026-01-21
+    Stale patch                                :w5, 2026-04-02, 2026-04-03
+    OpenTofu + M2M + reusable workflows + logos :crit, w6, 2026-05-10, 2026-05-24
+
+    section auth0-terraform
+    Bootstrap dev tenant                       :crit, t1, 2026-01-24, 2026-01-25
+    Actions + tests + CI                       :t2, 2026-01-25, 2026-01-26
+    DEVOPS-647 stage+prod imports              :crit, t3, 2026-01-28, 2026-01-29
+    Settings package fix + cleanup             :t4, 2026-02-02, 2026-02-03

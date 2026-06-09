@@ -1,36 +1,33 @@
-import React, { useState } from 'react';
-import { ThemeProvider, Theme, makeStyles } from '@material-ui/core';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { TerminalContextProvider } from 'react-terminal';
 
 import './App.css';
 import {
-  AppBar,
   Main,
   Header,
   Footer,
   Background,
-  Notification,
-  CookiePolicy,
-} from './components/layout';
+  Notification
+} from './components/Layout';
 import theme from './styles/theme';
-import { AuthProvider, NotificationProvider, authProvider } from './providers';
+import { AuthProvider, NotificationProvider } from './providers';
+import Terminal from './components/Layout/Terminal';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
-}));
 
 function App() {
-  const [consented, setConsented] = useState(authProvider.checkCookieConsent());
-  // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   return (
     <AuthProvider>
       <NotificationProvider>
-        <ThemeProvider theme={theme.dark}>
-          <AppBar consented={consented} />
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
           <Background />
           <Header />
           <Notification />
           <Main />
-          <CookiePolicy setConsented={setConsented} />
+          <TerminalContextProvider>
+            <Terminal />
+          </TerminalContextProvider>
           <Footer />
         </ThemeProvider>
       </NotificationProvider>

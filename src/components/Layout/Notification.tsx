@@ -1,33 +1,30 @@
-import React, { useContext } from 'react';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { useContext, forwardRef } from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import { styled } from '@mui/material/styles';
 
 import { NotificationContext } from '../../providers/NotificationProvider';
 
-function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant='filled' {...props} />;
-}
+const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
+  return <MuiAlert ref={ref} elevation={6} variant='filled' {...props} />;
+});
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    width: '100%',
-    '& > * + *': {
-      marginTop: theme.spacing(2),
-    },
+const Root = styled('div')(({ theme }) => ({
+  width: '100%',
+  '& > * + *': {
+    marginTop: theme.spacing(2),
   },
 }));
 
 export default function Notification() {
   const { close, state } = useContext(NotificationContext);
-  const classes = useStyles();
 
-  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+  const handleClose = () => {
     close();
   };
 
   return (
-    <div className={classes.root}>
+    <Root>
       <Snackbar
         open={state.open}
         anchorOrigin={{
@@ -40,6 +37,6 @@ export default function Notification() {
           {state.message}
         </Alert>
       </Snackbar>
-    </div>
+    </Root>
   );
 }
