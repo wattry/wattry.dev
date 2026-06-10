@@ -7,7 +7,7 @@
 /* ---- Fonts (self-hosted Space Grotesk, OFL licensed) -------------------- */
 @font-face {
   font-family: "Space Grotesk";
-  src: url("../public/brand/fonts/SpaceGrotesk-Regular.woff2") format("woff2");
+  src: url("https://wattry.dev/public/fonts/SpaceGrotesk-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -15,7 +15,7 @@
 
 @font-face {
   font-family: "Space Grotesk";
-  src: url("../public/brand/fonts/SpaceGrotesk-Medium.woff2") format("woff2");
+  src: url("https://wattry.dev/public/fonts/SpaceGrotesk-Medium.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -23,7 +23,7 @@
 
 @font-face {
   font-family: "Space Grotesk";
-  src: url("../public/brand/fonts/SpaceGrotesk-Bold.woff2") format("woff2");
+  src: url("https://wattry.dev/public/fonts/SpaceGrotesk-Bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;

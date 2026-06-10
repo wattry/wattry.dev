@@ -14,7 +14,7 @@ export const GlobeIcon = styled('div')({
   width: 20,
   height: 20,
   borderRadius: '50%',
-  backgroundImage: "url('/brand/favicon/icon-512.png')",
+  backgroundImage: "url('https://wattry.dev/public/favicon/icon-512.png')",
   backgroundSize: '20px 20px',
   backgroundRepeat: 'repeat-x',
   imageRendering: 'pixelated', // favicon.ico is low-res; swap to icon-512.png for a crisp globe
