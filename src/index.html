@@ -16,6 +16,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
     <!-- <link rel="manifest" href="/manifest.json" /> -->
     <title>wattry.dev</title>
+    <style>
+      /* Base styles applied before MUI theme + Space Grotesk fonts load (anti-FOUC) */
+      html {
+        /* Gradient on the canvas (html) only — paints behind the z-index:-1 video.
+           Body must stay transparent or it would cover the video. */
+        background-color: #000;
+        background-image: #000;
+        background-attachment: fixed;
+      }
+      #root {
+        min-height: 100vh;
+      }
+    </style>
   </head>
   <body>
     <img id="top-anchor" src="https://wattry.dev/public/logo/lockup-dark.svg" alt="wattry" height="34" />

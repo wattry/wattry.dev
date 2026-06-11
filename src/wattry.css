@@ -42,11 +42,15 @@
   --wattry-electric: #2E6BFF;
   /* links / secondary accent */
   --wattry-electric-2: #1B54D8;
-  /* link hover */
   --wattry-cloud: #FBFBF7;
-  /* off-white */
   --wattry-slate: #6B7280;
-  /* muted text */
+
+  /* Bolt gradient — blue-dominant, with magenta→orange tail, 135deg */
+  /* Bolt gradient — blue / purple / pink, 135deg with held color zones */
+  --wattry-bolt-gradient: linear-gradient(135deg, #2E6BFF 0%, #2E6BFF 20%, #7b2ff7 50%, #f107a3 80%, #f107a3 100%);
+  --wattry-bolt-c1: #2E6BFF;
+  --wattry-bolt-c2: #7b2ff7;
+  --wattry-bolt-c3: #f107a3;
 
   /* Typography */
   --wattry-font-display: "Space Grotesk", "Satoshi", system-ui, sans-serif;
@@ -68,7 +72,7 @@
   --wattry-space-12: 48px;
   --wattry-space-16: 64px;
 
-  /* Shadows (used sparingly) */
+  /* Shadows */
   --wattry-shadow: 0 1px 2px rgba(18, 20, 28, .06), 0 8px 24px rgba(18, 20, 28, .08);
 
   /* Semantic, light theme (default) */
@@ -81,7 +85,6 @@
   --accent-h: var(--wattry-electric-2);
 }
 
-/* Dark theme — toggle with <html data-theme="dark"> or system preference */
 [data-theme="dark"] {
   --bg: var(--wattry-ink);
   --surface: var(--wattry-ink-2);
@@ -111,15 +114,9 @@
   box-sizing: border-box;
 }
 
-html {
-  -webkit-text-size-adjust: 100%;
-}
-
 body {
   margin: 0;
-  /* Transparent so the fixed z-index:-1 background video is visible.
-     Fallback color lives on the html canvas (see index.html). */
-  background: transparent;
+  background: var(--bg);
   color: var(--fg);
   font-family: var(--wattry-font-body);
   font-size: 17px;
@@ -165,7 +162,6 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Selection uses the brand spark */
 ::selection {
   background: var(--wattry-voltage);
   color: var(--wattry-ink);
@@ -197,9 +193,12 @@ a:hover {
   width: auto;
 }
 
-/* bolt.svg / monogram.svg use currentColor — color them via CSS */
-.wattry-bolt {
-  color: var(--wattry-voltage);
+/* Apply the brand gradient to any text */
+.wattry-gradient-text {
+  background: var(--wattry-bolt-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 /* ---- Buttons ------------------------------------------------------------ */
@@ -215,7 +214,7 @@ a:hover {
   border-radius: var(--wattry-radius-pill);
   border: 1.5px solid transparent;
   cursor: pointer;
-  transition: transform .06s ease, background .15s ease, border-color .15s ease;
+  transition: transform .06s ease, background .15s ease, border-color .15s ease, filter .15s ease;
   text-decoration: none;
 }
 
@@ -246,6 +245,18 @@ a:hover {
   color: var(--fg);
 }
 
+/* Gradient button option — use sparingly for hero CTAs */
+.btn-bolt {
+  background: var(--wattry-bolt-gradient);
+  color: #fff;
+}
+
+.btn-bolt:hover {
+  filter: brightness(1.08);
+  color: #fff;
+  text-decoration: none;
+}
+
 /* ---- Surfaces / cards --------------------------------------------------- */
 .wattry-card {
   background: var(--surface);
@@ -274,8 +285,8 @@ a:hover {
   height: 3px;
   width: 56px;
   border-radius: 3px;
-  background: var(--wattry-voltage);
   border: none;
+  background: var(--wattry-bolt-gradient);
 }
 
 .text-muted {

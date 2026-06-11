@@ -4,6 +4,11 @@ const theme = responsiveFontSizes(
   createTheme({
     palette: {
       mode: 'dark',
+      // Transparent so CssBaseline doesn't paint an opaque body over the
+      // fixed z-index:-1 background video. Fallback color is on the html canvas.
+      background: {
+        default: 'transparent',
+      },
       primary: {
         main: '#F5E13C',
       },
