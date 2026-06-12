@@ -44,21 +44,21 @@ const theme = responsiveFontSizes(
             font-style: normal;
             font-display: swap;
             font-weight: 400;
-            src: url(https://wattry.dev/public/fonts/SpaceGrotesk-Regular.woff2) format('woff2');
+            src: url(https://cdn.wattry.dev/public/fonts/SpaceGrotesk-Regular.woff2) format('woff2');
           }
           @font-face {
             font-family: 'Space Grotesk';
             font-style: normal;
             font-display: swap;
             font-weight: 500;
-            src: url(https://wattry.dev/public/fonts/SpaceGrotesk-Medium.woff2) format('woff2');
+            src: url(https://cdn.wattry.dev/public/fonts/SpaceGrotesk-Medium.woff2) format('woff2');
           }
           @font-face {
             font-family: 'Space Grotesk';
             font-style: normal;
             font-display: swap;
             font-weight: 700;
-            src: url(https://wattry.dev/public/fonts/SpaceGrotesk-Bold.woff2) format('woff2');
+            src: url(https://cdn.wattry.dev/public/fonts/SpaceGrotesk-Bold.woff2) format('woff2');
           }
         `,
       },
