@@ -49,7 +49,7 @@ const skills = [
 ];
 
 export const Lambda = () => <span style={{ color: '#FB7E14' }}>λ</span>;
-const Prompt = () => <span>~/workspace/wattry.dev on main <GlobeIcon role="img" aria-label="wattry logo" /></span>;
+const Prompt = () => <span>~/workspace/wattry.com on main <GlobeIcon role="img" aria-label="wattry logo" /></span>;
 const color = 'linear-gradient(135deg, #2E6BFF 0%, #2E6BFF 20%, #7b2ff7 50%, #f107a3 80%, #f107a3 100%)';
 const yellow = '#F5E13C';
 const green = "#00FD61";
@@ -166,7 +166,7 @@ function Terminal() {
 
     pwd: () => {
       record('pwd');
-      return <Typography>~/workspace/wattry.dev</Typography>;
+      return <Typography>~/workspace/wattry.com</Typography>;
     },
 
     cat: (prompt: string) => {

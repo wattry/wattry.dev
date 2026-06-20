@@ -1,4 +1,4 @@
-# wattry.dev
+# wattry.com
 
 This page attempts to provide a simple web application architecture to demonstrate some of my skills.
 
