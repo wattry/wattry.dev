@@ -14,7 +14,6 @@ import theme from './styles/theme';
 import { AuthProvider, NotificationProvider } from './providers';
 import Terminal from './components/Layout/Terminal';
 
-
 function App() {
   return (
     <AuthProvider>
