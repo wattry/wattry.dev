@@ -252,7 +252,7 @@ function Terminal() {
       },
       help: (<li><strong>echo &lt;text&gt;</strong> - Print text.<br /></li>)
     },
-    themes: {
+    theme: {
       handler() {
         return (<Typography>{themes.map((name: string) => <li>{name}</li>)}</Typography>);
       },
