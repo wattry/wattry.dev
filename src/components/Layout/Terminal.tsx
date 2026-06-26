@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import type { ReactElement } from "react";
+import type { ReactElement, JSX } from "react";
 import { styled } from '@mui/material/styles';
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
@@ -49,6 +49,7 @@ const skills = [
 ];
 
 export const Lambda = () => <span style={{ color: '#FB7E14' }}>λ</span>;
+
 const Prompt = () => <span>~/workspace/wattry.com on main <GlobeIcon role="img" aria-label="wattry logo" /></span>;
 const color = 'linear-gradient(135deg, #2E6BFF 0%, #2E6BFF 20%, #7b2ff7 50%, #f107a3 80%, #f107a3 100%)';
 const yellow = '#F5E13C';
@@ -62,6 +63,11 @@ const defaultConfig = {
 };
 
 type DefaultConfig = typeof defaultConfig;
+
+interface Command {
+  handler: (args: string[]) => ReactElement,
+  help: JSX.Element | (() => ReactElement)
+}
 
 const Message = (
   props: { input: string | Error }
@@ -86,29 +92,6 @@ function Terminal() {
 
   const record = (entry: string) => setHistory((prev) => [...prev, entry]);
   const style = { marginLeft: '10px' };
-  const help = (
-    <span>
-      <li><strong>clear</strong> - clears the console. <br /></li>
-      <li><strong>config</strong> - Manage individual theme config.<br /></li>
-      <strong style={style}>config list</strong> - List config options.<br />
-      <strong style={style}>config get &lt;name&gt;</strong> - Get config value by key.<br />
-      <strong style={style}>config set &lt;name&gt; &lt;value&gt;</strong> - Set config value by key.<br />
-      <strong style={style}>config theme list</strong> - List theme options.<br />
-      <li><strong>theme</strong> - Get the current theme.<br /></li>
-      <strong style={style}>theme &lt;name&gt;</strong> - Changes the theme of the terminal.<br />
-      <strong style={style}>theme list</strong> - List available themes.<br />
-      <li><strong>about</strong> - Who I am.<br /></li>
-      <li><strong>skills</strong> - What I can do.<br /></li>
-      <li><strong>ls</strong> - List files.<br /></li>
-      <li><strong>pwd</strong> - Print working directory.<br /></li>
-      <li><strong>whoami</strong> - Current user.<br /></li>
-      <li><strong>cat &lt;file&gt;</strong> - Print a file's contents.<br /></li>
-      <li><strong>echo &lt;text&gt;</strong> - Print text.<br /></li>
-      <li><strong>date</strong> - Current date and time.<br /></li>
-      <li><strong>history</strong> - Command history.<br /></li>
-    </span>
-  );
-
   const aboutContent = (
     <>
       <Link
@@ -123,95 +106,117 @@ function Terminal() {
       <Typography >A career spanning several industries — namely finance, accounting, insurance, energy & networking. Expertise in designing and deploying AWS/GCP infrastructure using CI/CD pipelines to deliver on key business objectives. Collaborated with customers and internal teams to deliver quality UIs and APIs.</Typography><br />
     </>
   );
-
   const skillsContent = <Typography>{skills.map((name: string) => <li>{name}</li>)}</Typography>;
-
   const contactContent = (
     <Typography>
       GitHub: <Link color="primary" underline="hover" href="https://github.com/wattry" target="_blank">https://github.com/wattry</Link><br />
       LinkedIn: <Link color="primary" underline="hover" href="https://www.linkedin.com/in/wattry" target="_blank">https://www.linkedin.com/in/wattry</Link>
     </Typography>
   );
-
   const defaultFiles: Record<string, ReactElement> = {
     'about.md': aboutContent,
     'skills.txt': skillsContent,
     'contact.md': contactContent,
   };
   const [files, setFiles] = useState<Record<string, ReactElement>>(defaultFiles);
+  const handleHelp = (command: Command) => typeof command.help === 'function'
+    ? command.help()
+    : command.help;
 
-  const commands = {
-    help: help,
-    h: help,
-
-    whoami: () => {
-      record('whoami');
-      return <Typography>wattry — Senior Software Engineer, Solutions Architect &amp; Team Leader</Typography>;
+  const commands: Record<string, Command> = {
+    whoami: {
+      handler() {
+        return <Typography>wattry — Senior Software Engineer, Solutions Architect &amp; Team Leader</Typography>;
+      },
+      help: (<li><strong>whoami</strong> - Brief description.<br /></li>)
     },
-
-    about: () => {
-      record('about');
-      return aboutContent;
+    about: {
+      handler() {
+        return aboutContent;
+      },
+      help: (<li><strong>about</strong> - Who I am.<br /></li>)
     },
-
-    skills: () => {
-      record('skills');
-      return skillsContent;
+    skills: {
+      handler() {
+        return skillsContent;
+      },
+      help: (<li><strong>skills</strong> - What I can do.<br /></li>)
     },
+    ls: {
+      handler() {
+        console.log('where the eff is this?');
 
-    ls: () => {
-      record('ls');
-      return <Typography>{Object.keys(files).map((name: string, i: number) => <li key={`file-${i}`}>{name}</li>)}</Typography>;
+        return <Typography>{Object.keys(files).map((name: string, i: number) => <li key={`file-${i}`}>{name}</li>)}</Typography>;
+      },
+      help: (<li><strong>ls</strong> - List files.<br /></li>)
     },
-
-    pwd: () => {
-      record('pwd');
-      return <Typography>~/workspace/wattry.com</Typography>;
+    pwd: {
+      handler() {
+        record('pwd');
+        return <Typography>~/workspace/wattry.com</Typography>;
+      },
+      help: (<li><strong>pwd</strong> - Print working directory.<br /></li>)
     },
+    cat: {
+      handler(args) {
+        const [file] = args;
 
-    cat: (prompt: string) => {
-      record(`cat ${prompt}`.trim());
-      const [file]: string[] = prompt.split(' ');
+        if (!file) {
+          return <Message input={new Error("cat: missing file operand")} />;
+        }
 
-      if (!file) {
-        return <Message input={new Error("cat: missing file operand")} />;
-      }
+        if (file in files) {
+          return <>{files[file]}</>;
+        }
 
-      if (file in files) {
-        return files[file];
-      }
-
-      return <Message input={new Error(`cat: ${file}: No such file or directory`)} />;
+        return <Message input={new Error(`cat: ${file}: No such file or directory`)} />;
+      },
+      help: (<li><strong>cat &lt;file&gt;</strong> - Print a file's contents.<br /></li>)
     },
+    touch: {
+      handler(args) {
+        const [name] = args;
 
-    touch: (prompt: string) => {
-      record(`touch ${prompt}`.trim());
-      const [name] = prompt.split(' ');
-
-      if (name) {
-        setFiles((prev) => {
-          return { ...prev, [name.trim().replace('./', '')]: <></> };
-        });
-
-        return <Message input={`${prompt} created`} />;
-      }
-    },
-
-    rm: (prompt: string) => {
-      record(`rm ${prompt}`);
-
-      const [...values] = prompt.split(' ');
-
-      if (values.length > 1) {
-        const matches = Object.keys(files).filter((file) => {
-          return values.find((name: string) => {
-            console.log(file, name);
-            
-            return file.includes(name.trim().replace('./', ''))
+        if (name) {
+          setFiles((prev) => {
+            return { ...prev, [name.trim().replace('./', '')]: <></> };
           });
+
+          return <Message input={`${prompt} created`} />;
+        }
+
+        return <></>;
+      },
+      help: (<li><strong>help</strong> - Create a new empty file.<br /></li>)
+    },
+    rm: {
+      handler(args) {
+        if (args.length > 1) {
+          const matches = Object.keys(files).filter((file) => {
+            return args.find((name: string) => file.includes(name.trim().replace('./', '')));
+          });
+
+          if (matches.length) {
+            setFiles((prev) => {
+              const updated = { ...prev };
+              for (const match of matches) {
+                delete updated[match];
+              }
+
+              return updated;
+            });
+
+            return <Message input={`${matches.join(' ')} removed`} />;
+          }
+
+          return <></>;
+        }
+
+        const matches = Object.keys(files).filter((name) => {
+          return name.includes(args.join(' ').replace('./', ''));
         });
 
-        if (matches.length) { 
+        if (matches.length) {
           setFiles((prev) => {
             const updated = { ...prev };
             for (const match of matches) {
@@ -221,103 +226,109 @@ function Terminal() {
             return updated;
           });
 
-          return <Message input={`${matches.join(' ')} removed`} />;
+          return <Message input={`${prompt} removed`} />;
         }
 
-        return <></>;
-      }
+        return <></>
+      },
+      help: (<li><strong>rm</strong> - Delete a file.<br /></li>)
+    },
+    echo: {
+      handler(args) {
+        return <Typography>echo {args.join(' ')}</Typography>;
+      },
+      help: (<li><strong>echo &lt;text&gt;</strong> - Print text.<br /></li>)
+    },
+    date: {
+      handler() {
+        return <Typography>{new Date().toString()}</Typography>;
+      },
+      help: (<li><strong>date</strong> - Current date and time.<br /></li>)
+    },
+    history: {
+      handler() {
+        const entries = [...history, 'history'];
+        return <Typography>{entries.map((entry, i) => <li key={i}>{`${i + 1}  ${entry}`}</li>)}</Typography>;
+      },
+      help: (<li><strong>echo &lt;text&gt;</strong> - Print text.<br /></li>)
+    },
+    themes: {
+      handler() {
+        return (<Typography>{themes.map((name: string) => <li>{name}</li>)}</Typography>);
+      },
+      help: (<>
+        <li><strong>theme</strong> - Get the current theme.<br /></li>
+        <strong style={style}>theme &lt;name&gt;</strong> - Changes the theme of the terminal.<br />
+        <strong style={style}>theme list</strong> - List available themes.<br />
+      </>)
+    },
+    config: {
+      handler(args) {
+        const [cmd, subCommand, value] = args;
 
-      const matches = Object.keys(files).filter((name) => {
-        return name.includes(prompt.trim().replace('./', ''));
-      });
+        if (cmd === 'theme') {
+          if (subCommand === 'list') {
+            return <Typography>{themes.map((name: string) => <li>{name}</li>)}</Typography>;
+          }
+        }
 
-      if (matches.length) {
-        setFiles((prev) => {
-          const updated = { ...prev };
-          for (const match of matches) {
-            delete updated[match];
+        if (cmd === 'get') {
+          if (subCommand === 'theme') {
+            return <li>{theme}</li>;
           }
 
-          return updated;
-        });
+          const key = subCommand as keyof DefaultConfig;
+          const value = defaultConfig[key];
 
-        return <Message input={`${prompt} removed`} />;
-      }
-    },
-
-    echo: (prompt: string) => {
-      record(`echo ${prompt}`);
-      return <Typography>{prompt}</Typography>;
-    },
-
-    date: () => {
-      record('date');
-      return <Typography>{new Date().toString()}</Typography>;
-    },
-
-    history: () => {
-      const entries = [...history, 'history'];
-      return <Typography>{entries.map((entry, i) => <li key={i}>{`${i + 1}  ${entry}`}</li>)}</Typography>;
-    },
-
-    themes: () => <Typography>{themes.map((name: string) => <li>{name}</li>)}</Typography>,
-    config: (prompt: string) => {
-      record(`config ${prompt}`);
-      const [cmd, subCommand, value] = prompt.split(' ');
-
-      if (cmd === 'theme') {
-        if (subCommand === 'list') {
-          return <Typography>{themes.map((name: string) => <li>{name}</li>)}</Typography>;
-        }
-      }
-
-      if (cmd === 'get') {
-        if (subCommand === 'theme') {
-          return <li>{theme}</li>;
-        }
-
-        const key = subCommand as keyof DefaultConfig;
-        const value = defaultConfig[key];
-
-        if (key && defaultConfig[key]) {
-          return <li>{key}&#9;{value}</li>
-        }
-
-        return <Message input={new Error("config key required")} />;
-      }
-
-      if (cmd === 'set') {
-        if (subCommand === 'theme' && typeof value === 'string') {
-          if (themes.includes(value)) {
-            setTheme(value);
-
-            return <Message input={`theme\t\t${value} saved`} />;
+          if (key && defaultConfig[key]) {
+            return <li>{key}&#9;{value}</li>
           }
 
-          return <Message input={new Error("Invalid theme!")} />;
+          return <Message input={new Error("config key required")} />;
         }
 
-        const key = subCommand as keyof DefaultConfig;
+        if (cmd === 'set') {
+          if (subCommand === 'theme' && typeof value === 'string') {
+            if (themes.includes(value)) {
+              setTheme(value);
 
-        if (key && defaultConfig[key] && value && typeof value === 'string') {
-          setConfig((prev) => ({ ...prev, [key]: value }));
+              return <Message input={`theme\t\t${value} saved`} />;
+            }
 
-          return <Message input={`${key}\t\t${value} saved`} />;
+            return <Message input={new Error("Invalid theme!")} />;
+          }
+
+          const key = subCommand as keyof DefaultConfig;
+
+          if (key && defaultConfig[key] && value && typeof value === 'string') {
+            setConfig((prev) => ({ ...prev, [key]: value }));
+
+            return <Message input={`${key}\t\t${value} saved`} />;
+          }
+
+          return <Message input={new Error("config key required")} />;
         }
 
-        return <Message input={new Error("config key required")} />;
-      }
+        if (cmd === 'reset') {
+          setTheme('wattry');
+          setConfig(defaultConfig);
 
-      if (cmd === 'reset') {
-        setTheme('wattry');
-        setConfig(defaultConfig);
+          return <Message input={`config reset`} />;
+        }
 
-        return <Message input={`config reset`} />;
-      }
+        const keys = Object.entries(defaultConfig);
 
-      const keys = Object.entries(defaultConfig);
-
-      return <Typography>{keys.map(([key, value]: string[]) => <li>{key}&#9;&#9;{value}</li>)}</Typography>;
+        return <Typography>{keys.map(([key, value]: string[]) => <li>{key}&#9;&#9;{value}</li>)}</Typography>;
+      },
+      help: (
+        <>
+          <li><strong>config</strong> - Manage individual theme config.<br /></li>
+          <strong style={style}>config list</strong> - List config options.<br />
+          <strong style={style}>config get &lt;name&gt;</strong> - Get config value by key.<br />
+          <strong style={style}>config set &lt;name&gt; &lt;value&gt;</strong> - Set config value by key.<br />
+          <strong style={style}>config theme list</strong> - List theme options.<br />
+        </>
+      )
     }
   };
 
@@ -326,14 +337,27 @@ function Terminal() {
       <ReactTerminal
         prompt={prompt}
         theme={theme}
-        themes={{
-          "wattry": config
-        }}
+        themes={{ "wattry": config }}
         welcomeMessage={<span>Type "help" for available commands.<br /></span>}
-        commands={commands}
-        defaultHandler={(command: string, commandArguments: string[]) => {
+        defaultHandler={(command: string, args: string) => {
+          record(`${command} ${args}`);
+
+          if (command === 'help' || command === 'h') {
+            return <>{Object.values(commands).map((command) => handleHelp(command))}</>;
+          }
+
+          const result = commands?.[command];
+
+          if (result) {
+            if (args.startsWith('help') || args.startsWith('-h') || args.startsWith('--help')) {
+              return handleHelp(result);
+            }
+
+            return result.handler(args.split(' '));
+          }
+
           return <>
-            <br />{`${command}: command not found`} <br /><br />
+            {`${command}: command not found`} <br />
           </>;
         }}
       />
