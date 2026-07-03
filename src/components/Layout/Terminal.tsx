@@ -144,8 +144,6 @@ function Terminal() {
     },
     ls: {
       handler() {
-        console.log('where the eff is this?');
-
         return <Typography>{Object.keys(files).map((name: string, i: number) => <li key={`file-${i}`}>{name}</li>)}</Typography>;
       },
       help: (<li><strong>ls</strong> - List files.<br /></li>)
@@ -235,7 +233,7 @@ function Terminal() {
     },
     echo: {
       handler(args) {
-        return <Typography>echo {args.join(' ')}</Typography>;
+        return <Typography>{args.join(' ').replaceAll("'", "").replaceAll('"', "")}</Typography>;
       },
       help: (<li><strong>echo &lt;text&gt;</strong> - Print text.<br /></li>)
     },
