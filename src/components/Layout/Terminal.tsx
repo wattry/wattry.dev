@@ -327,6 +327,21 @@ function Terminal() {
           <strong style={style}>config theme list</strong> - List theme options.<br />
         </>
       )
+    },
+    fetch: {
+      async handler(args) {
+        const url = new URL(import.meta.env.VITE_CF_ENDPOINT)
+
+        return fetch(url).then(async (res) => {
+          console.log(await res.json());
+          return <Message input="Fetched data check logs" />
+        })
+          .catch((error) => {
+            return <Message input={error} />
+          })
+      }, help: (
+        <li><strong>fetch</strong> - Make an async request.<br /></li>
+      )
     }
   };
 

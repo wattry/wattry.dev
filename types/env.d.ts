@@ -8,15 +8,9 @@ interface ImportMetaEnv {
   readonly VITE_RESPONSE_TYPE: string;
   readonly VITE_CLIENT_ID: string;
   readonly VITE_API: string;
+  readonly VITE_CF_ENDPOINT: string;
 }
 
 interface ImportMeta {
   readonly env: ImportMetaEnv
 }
-
-
-
-
-
-
-

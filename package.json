@@ -25,7 +25,8 @@
     "@types/react-scroll": "^1.8.10",
     "@vitejs/plugin-react": "^6.0.2",
     "typescript": "^6.0.3",
-    "vite": "^8.0.14"
+    "vite": "^8.0.14",
+    "wrangler": "^4.107.0"
   },
   "scripts": {
     "start": "PORT=3000 vite",
@@ -33,7 +34,10 @@
     "prebuild": "rm -rf docs build",
     "build": "vite build",
     "preview": "vite preview",
-    "tc": "npx tsc --noEmit"
+    "tc": "npx tsc --noEmit",
+    "cf:deploy": "wrangler deploy",
+    "cf:dev": "wrangler dev",
+    "cf:start": "wrangler dev"
   },
   "proxy": "http://localhost:3001",
   "eslintConfig": {

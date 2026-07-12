@@ -30,6 +30,7 @@ jobs:
       - run: pnpm build
         env:
           PROD: ${{ env.PROD }}
+          VITE_CF_ENDPOINT: ${{ env.VITE_CF_ENDPOINT }}
       - uses: actions/upload-pages-artifact@v4
         with:
           path: dist
