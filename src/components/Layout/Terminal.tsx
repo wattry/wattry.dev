@@ -65,7 +65,7 @@ const defaultConfig = {
 type DefaultConfig = typeof defaultConfig;
 
 interface Command {
-  handler: (args: string[]) => ReactElement,
+  handler: (args: string[]) => ReactElement | Promise<ReactElement>,
   help: JSX.Element | (() => ReactElement)
 }
 
@@ -332,13 +332,16 @@ function Terminal() {
       async handler(args) {
         const url = new URL(import.meta.env.VITE_CF_ENDPOINT)
 
-        return fetch(url).then(async (res) => {
-          console.log(await res.json());
-          return <Message input="Fetched data check logs" />
-        })
-          .catch((error) => {
-            return <Message input={error} />
-          })
+        try {
+          const res = await fetch(url);
+          const json = await res.json();
+
+          return <Message input={json.data} />
+        } catch (e: unknown) {
+          const error = e as Error;
+
+          return <Message input={error} />
+        }
       }, help: (
         <li><strong>fetch</strong> - Make an async request.<br /></li>
       )

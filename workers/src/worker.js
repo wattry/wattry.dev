@@ -18,9 +18,26 @@ export default {
    */
   async fetch(request, env, ctx) {
     // You can view your logs in the Observability dashboard
-    console.info({ message: 'Hello World Worker received a request!' });
+    const corsHeaders = {
+      "Access-Control-Allow-Origin": "http://localhost:3000",
+      "Access-Control-Allow-Methods": "GET, HEAD, POST, OPTIONS",
+      "Access-Control-Max-Age": "86400",
+      "Access-Control-Allow-Headers": "*"
+    };
+    // Handle CORS preflight requests
+    if (request.method === "OPTIONS") {
+      return new Response(null, { headers: corsHeaders });
+    }
 
-    return new Response('Hello World!');
+    const res = new Response(JSON.stringify({ data: 'Hello World!' }));
+
+    for (const [key, value] of Object.entries(corsHeaders)) {
+      res.headers.set(key, value);
+    }
+
+    res.headers.set('content-type', 'application/json')
+
+    return res;
   }
 };
 
