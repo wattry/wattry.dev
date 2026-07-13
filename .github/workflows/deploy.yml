@@ -31,6 +31,8 @@ jobs:
         env:
             NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: pnpm build
+        env:
+          VITE_CF_ENDPOINT: ${{ vars.VITE_CF_ENDPOINT }}
       - uses: actions/upload-pages-artifact@v4
         with:
           path: dist
