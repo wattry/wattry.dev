@@ -84,7 +84,7 @@ const Message = (
 };
 
 function Terminal() {
-  const { setTemporaryContent, temporaryContent } = useContext(TerminalContext);
+  const { } = useContext(TerminalContext);
   const [theme, setTheme] = useState<string>("wattry");
   const [prompt] = useState<string | ReactElement>(<Prompt />);
   const [history, setHistory] = useState<string[]>([]);
