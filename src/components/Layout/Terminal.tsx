@@ -84,7 +84,7 @@ const Message = (
 };
 
 function Terminal() {
-  const { } = useContext(TerminalContext);
+  const { setTemporaryContent, temporaryContent } = useContext(TerminalContext);
   const [theme, setTheme] = useState<string>("wattry");
   const [prompt] = useState<string | ReactElement>(<Prompt />);
   const [history, setHistory] = useState<string[]>([]);
@@ -329,14 +329,17 @@ function Terminal() {
       )
     },
     fetch: {
-      async handler(args) {
-        const url = new URL(import.meta.env.VITE_CF_ENDPOINT)
-
+      async handler() {
         try {
+          const url = new URL(import.meta.env.VITE_CF_ENDPOINT)
           const res = await fetch(url);
           const json = await res.json();
 
-          return <Message input={json.data} />
+          return <>
+            Data: {json.data}<br />
+            Status: {res.status} {res.statusText}<br />
+            Headers: {Array.from(res.headers.entries().map(([key, value]) => `${key}: ${value}`)).join('\n')}
+          </>
         } catch (e: unknown) {
           const error = e as Error;
 

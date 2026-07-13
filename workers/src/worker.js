@@ -19,7 +19,7 @@ export default {
   async fetch(request, env, ctx) {
     // You can view your logs in the Observability dashboard
     const corsHeaders = {
-      "Access-Control-Allow-Origin": env.LOCAL ? "http://localhost:3000" : 'https://api.wattry.com',
+      "Access-Control-Allow-Origin": env.LOCAL ? "http://localhost:3000" : 'https://wattry.com',
       "Access-Control-Allow-Methods": "GET, HEAD, POST, OPTIONS",
       "Access-Control-Max-Age": "86400",
       "Access-Control-Allow-Headers": "*"
