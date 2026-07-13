@@ -21,6 +21,7 @@
     "react-terminal": "^1.4.5"
   },
   "devDependencies": {
+    "@posthog/rollup-plugin": "^1.4.7",
     "@types/node": "^24.12.4",
     "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3",

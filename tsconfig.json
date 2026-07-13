@@ -46,6 +46,7 @@
     "esModuleInterop": true,
     "strict": true,
     "noImplicitAny": true,
+    "sourceMap": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "strictBindCallApply": true,
