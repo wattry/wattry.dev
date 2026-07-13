@@ -15,7 +15,7 @@ export default ({ mode }: { mode: string }) => {
         projectId: process.env.POSTHOG_PROJECT_ID,
         host: process.env.POSTHOG_HOST,
         sourcemaps: {
-          enabled: !!process.env.POSTHOG_PROJECT_ID,
+          enabled: true,
           deleteAfterUpload: true,
         },
       }),
