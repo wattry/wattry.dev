@@ -338,7 +338,7 @@ function Terminal() {
           return <>
             Data: {json.data}<br />
             Status: {res.status} {res.statusText}<br />
-            Headers: {Array.from(res.headers.entries().map(([key, value]) => `${key}: ${value}`)).join('\n')}
+            Headers: {Array.from(res.headers.entries().map(([key, value]) => `${key}: ${value}`)).join(', ')}
           </>
         } catch (e: unknown) {
           const error = e as Error;
