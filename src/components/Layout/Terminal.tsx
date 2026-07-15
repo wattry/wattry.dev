@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import { ReactTerminal, TerminalContext } from "react-terminal";
+import { Batch } from '@wattry/promises/browser'
 
 import { GlobeIcon } from "../GlobeLogo";
 
@@ -67,7 +68,7 @@ type DefaultConfig = typeof defaultConfig;
 interface Command {
   handler: (args: string[]) => ReactElement | Promise<ReactElement>,
   help: JSX.Element | (() => ReactElement)
-}
+};
 
 const Message = (
   props: { input: string | Error }
@@ -84,7 +85,7 @@ const Message = (
 };
 
 function Terminal() {
-  const { } = useContext(TerminalContext);
+  const { setTemporaryContent, setBufferedContent } = useContext(TerminalContext);
   const [theme, setTheme] = useState<string>("wattry");
   const [prompt] = useState<string | ReactElement>(<Prompt />);
   const [history, setHistory] = useState<string[]>([]);
@@ -122,6 +123,93 @@ function Terminal() {
   const handleHelp = (command: Command) => typeof command.help === 'function'
     ? command.help()
     : command.help;
+  const formatWhiteSpace = (text: string, options = { tabs: 1, spaces: 2 }) => {
+    const { tabs = 1, spaces = 2 } = options;
+    const lines = text.split('\n');
+    let baseIndent: number | null = null;
+
+    return lines.reduce((a: string, b: string) => {
+      const tabsMatch = b.match(/^\t+/g);
+      const spaceMatch = b.match(/^ +/g);
+      const isTabs = !!tabsMatch?.length;
+      const isSpaces = !!spaceMatch?.length;
+
+      if (!isTabs && !isSpaces) {
+        return a + b + '\n';
+      }
+
+      const char = isTabs ? '\t' : ' ';
+      const indentRegex = isTabs ? /^\t+/gm : /^\ +/gm
+      const value = isTabs
+        ? tabsMatch.pop()
+        : spaceMatch?.pop();
+
+      if (!value) {
+        return a + b;
+      }
+
+      if (baseIndent === null) {
+        // The first line that has an indent sets the tone for the rest
+        baseIndent = isTabs
+          ? value.length - tabs
+          : value.length - spaces;
+      }
+
+      const indentLength = value.length - baseIndent;
+      const multiplier = indentLength === 0 ? baseIndent : indentLength
+      const adjusted = a + char.repeat(multiplier) + (b.replaceAll(indentRegex, '') + '\n');
+
+      if (isTabs) {
+        return adjusted.replaceAll(/\t/gm, '  ');
+      }
+      return adjusted;
+    }, '');
+  };
+  const promiseHandler = async (debug: boolean, setContent: typeof setBufferedContent) => {
+    const worker = async (index: number): Promise<{ character: string }> => {
+      const character = String.fromCharCode(index < 96 ? index + 33 : index + 66);
+      const label = `${index} ${character}`;
+
+      console.time(label);
+
+      return new Promise<{ character: string }>((resolve, reject) => {
+        setContent(`Promise n: ${index}. character: ${character}`);
+
+        setTimeout(() => {
+          if (index === 83) {
+            reject(new Error('Unable to handle promise'));
+          } else {
+            setContent(`Promise resolved n: ${index}`);
+            console.timeEnd(label);
+            resolve({ character });
+          }
+        }, 1500);
+      });
+    }
+
+    try {
+      console.time('promise');
+      const b = new Batch<{ character: string }, [number]>({ debug });
+
+      ', '.repeat(99).split(', ').forEach((_, index) => {
+        b.add(worker, [index]);
+      })
+
+      await b.settle();
+
+      return <>
+        Data Count: {b.results.length}<br />
+        Error Count: {b.errors.length}<br />
+        Debug: {b.debug ? 'Yes' : 'No'}
+      </>
+    } catch (e: unknown) {
+      const error = e as Error;
+
+      return <Message input={error} />
+    } finally {
+      console.timeEnd('promise');
+    }
+  }
 
   const commands: Record<string, Command> = {
     whoami: {
@@ -339,14 +427,36 @@ function Terminal() {
             Data: {json.data}<br />
             Status: {res.status} {res.statusText}<br />
             Headers: {Array.from(res.headers.entries().map(([key, value]) => `${key}: ${value}`)).join(', ')}
-          </>
+          </>;
         } catch (e: unknown) {
           const error = e as Error;
 
           return <Message input={error} />
         }
       }, help: (
-        <li><strong>fetch</strong> - Make an async request.<br /></li>
+        <li><strong>fetch</strong> - Make an async request to a Cloudflare worker (Lambda).<br /></li>
+      )
+    },
+    promise: {
+      async handler(args) {
+        if (args[0] === 'code') {
+          const code = formatWhiteSpace(promiseHandler.toString());
+
+          return <div style={{ whiteSpace: 'pre-wrap' }}>{code}</div>;
+        }
+
+        const debug = !!args?.[0];
+
+        if (debug) {
+          setTemporaryContent('Check the console logs. Make sure you enable verbose mode');
+        }
+
+        return promiseHandler(debug, setBufferedContent);
+      }, help: (
+        <>
+          <li><strong>promise</strong> - Use the @wattry/promises library to handle batches of promises.<br /></li>
+          <strong>debug</strong> - Show debug logging.<br />
+        </>
       )
     }
   };
