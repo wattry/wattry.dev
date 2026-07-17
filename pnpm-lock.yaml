@@ -21,8 +21,8 @@ importers:
         specifier: ^1.10.0
         version: 1.10.3(@types/react@19.2.17)(posthog-js@1.403.0)(react@19.2.7)
       '@wattry/promises':
-        specifier: ^0.1.4
-        version: 0.1.4
+        specifier: ^0.1.5
+        version: 0.1.5
       axios:
         specifier: ^1.16.1
         version: 1.18.1
@@ -986,8 +986,8 @@ packages:
       babel-plugin-react-compiler:
         optional: true
 
-  '@wattry/promises@0.1.4':
-    resolution: {integrity: sha512-u7NUujveRCiHbTIr1Z2e4J+e61j4v5j/DSBg6O3DtMusTDVMtHLOwbDVoQdI+lZD+mjKhO82D5zXMnwq8ZOn5g==, tarball: https://npm.pkg.github.com/download/@wattry/promises/0.1.4/20fe7b7666c165bb71522f0fcd735420c9f1c66e}
+  '@wattry/promises@0.1.5':
+    resolution: {integrity: sha512-61G6qMPPmv4Kiy/1htm4acv6Cwm8SUpTDpEk5qH2gIXWvrMbxUDITkmxFo6MKy7hK6r5wIAyl31iFEYDAalk9g==, tarball: https://npm.pkg.github.com/download/@wattry/promises/0.1.5/83d20092a4ddcc57dc35baa2bbe13618132410d4}
 
   agent-base@6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
@@ -2269,7 +2269,7 @@ snapshots:
       '@rolldown/pluginutils': 1.0.1
       vite: 8.1.5(@types/node@24.13.3)(esbuild@0.28.1)
 
-  '@wattry/promises@0.1.4': {}
+  '@wattry/promises@0.1.5': {}
 
   agent-base@6.0.2:
     dependencies:

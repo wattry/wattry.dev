@@ -13,7 +13,7 @@
     "@mui/icons-material": "^9.0.1",
     "@mui/material": "^9.0.1",
     "@posthog/react": "^1.10.0",
-    "@wattry/promises": "^0.1.4",
+    "@wattry/promises": "^0.1.5",
     "axios": "^1.16.1",
     "idb": "^8.0.3",
     "react": "^19.2.6",
