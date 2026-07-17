@@ -8,5 +8,3 @@ allowBuilds:
   fsevents: true
   sharp: true
   workerd: true
-minimumReleaseAgeExclude:
-  - '@wattry/promises@0.1.4'
