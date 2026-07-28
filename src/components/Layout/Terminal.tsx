@@ -7,6 +7,7 @@ import { ReactTerminal, TerminalContext } from "react-terminal";
 import { Batch } from '@wattry/promises/browser'
 
 import { GlobeIcon } from "../GlobeLogo";
+import workGantt from "../../static/work-gantt.svg";
 
 const Root = styled('div')(({ theme }) => ({
   fontFamily: 'Space Grotesk',
@@ -475,6 +476,15 @@ function Terminal() {
           <strong>debug</strong> - Show debug logging.<br />
         </>
       )
+    },
+    work: {
+      handler() {
+        return <>
+          <Typography>Engineering activity over the trailing 6 months, anonymized across all repositories.</Typography>
+          <img src={workGantt} alt="Gantt chart of anonymized engineering activity over the last 6 months" style={{ width: '100%', maxWidth: '900px' }} />
+        </>;
+      },
+      help: (<li><strong>work</strong> - 6-month engineering activity chart.<br /></li>)
     }
   };
 
