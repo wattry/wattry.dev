@@ -8,6 +8,9 @@ import { Batch } from '@wattry/promises/browser'
 
 import { GlobeIcon } from "../GlobeLogo";
 import workGantt from "../../static/work-gantt.svg";
+import TypeTest from "./TypeTest";
+import Leaderboard from "./Leaderboard";
+import { snippets } from "../../static/snippets";
 
 const Root = styled('div')(({ theme }) => ({
   fontFamily: 'Space Grotesk',
@@ -485,6 +488,33 @@ function Terminal() {
         </>;
       },
       help: (<li><strong>work</strong> - 18-month engineering activity chart.<br /></li>)
+    },
+    typetest: {
+      async handler(args) {
+        if (args[0] === 'board') {
+          return <Leaderboard />;
+        }
+
+        const snippet = snippets[Math.floor(Math.random() * snippets.length)];
+
+        if (!snippet) {
+          return <Message input={new Error('no snippets available')} />;
+        }
+
+        return new Promise<ReactElement>((resolve) => {
+          setTemporaryContent(
+            <TypeTest
+              snippet={snippet}
+              onDone={(result) => resolve(<Leaderboard result={result} />)}
+              onAbort={() => resolve(<Typography>typetest aborted</Typography>)}
+            />
+          );
+        });
+      },
+      help: (<>
+        <li><strong>typetest</strong> - Code typing test. Esc aborts.<br /></li>
+        <strong style={style}>typetest board</strong> - Global top-20 leaderboard.<br />
+      </>)
     }
   };
 
