@@ -54,7 +54,10 @@ work-org repos — safe because the output is anonymized.
 - Excluded repos (never chart, regardless of activity): `wattry/splitstupid`.
 - Bars under ~4 events that are isolated noise (a lone review, a one-commit
   day) may be folded into an adjacent bar of the same section or dropped —
-  but list every drop in the run summary, never silently.
+  but ONLY for the user's own repos (`wattry/*` and orgs the user owns).
+  Activity on third-party repos (e.g. `google/clasp`) is an external OSS
+  contribution: always chart it, no matter how small — even a single
+  commit or issue. List every drop in the run summary, never silently.
 
 ## 3. Anonymization gate (mandatory)
 
