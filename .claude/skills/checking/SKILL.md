@@ -45,13 +45,15 @@ work-org repos — safe because the output is anonymized.
     name): generic, non-identifying role names prefixed "Work — ", e.g.
     "Work — Platform API", "Work — Web client", "Work — Developer tooling".
     Never the repo, org, product, or ticket names.
-  - **Personal repos**: real names, prefixed by kind — "OSS — <name> (npm)"
-    for published libraries, "Personal Development — <name>" for personal
-    projects (never "Side"), "Site — ", "Demo — ", "Tool — " as fits. Check
+  - **Personal-org repos** (referos, postnesia, galvanized-solutions, and
+    other orgs the user owns): real names, prefixed by kind — "OSS — <name>"
+    for libraries, "Personal Development — <name>" for personal projects
+    (never "Side"), "Site — ", "Demo — ", "Tool — " as fits. Check
     visibility with `gh repo view <repo> --json visibility`; public repos
     always safe to name, private personal repos may be named (name only, no
     contents).
-- Excluded repos (never chart, regardless of activity): `wattry/splitstupid`.
+- Excluded repos (never chart, regardless of activity): ALL `wattry/*`
+  repos — they expose too much personal info.
 - Bars under ~4 events that are isolated noise (a lone review, a one-commit
   day) may be folded into an adjacent bar of the same section or dropped —
   but ONLY for the user's own repos (`wattry/*` and orgs the user owns).
