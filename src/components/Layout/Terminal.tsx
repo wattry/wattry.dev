@@ -481,7 +481,7 @@ function Terminal() {
       handler() {
         return <>
           <Typography>Engineering activity over the trailing 6 months, anonymized across all repositories.</Typography>
-          <img src={workGantt} alt="Gantt chart of anonymized engineering activity over the last 6 months" style={{ width: '100%', maxWidth: '900px' }} />
+          <img src={workGantt} alt="Gantt chart of anonymized engineering activity over the last 6 months" style={{ width: '100%' }} />
         </>;
       },
       help: (<li><strong>work</strong> - 6-month engineering activity chart.<br /></li>)
