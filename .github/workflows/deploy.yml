@@ -26,9 +26,11 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 24
+          registry-url: https://npm.pkg.github.com
+          scope: '@wattry'
       - run: pnpm install --frozen-lockfile
         env:
-            NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: pnpm build
         env:
           VITE_CF_ENDPOINT: ${{ vars.VITE_CF_ENDPOINT }}
