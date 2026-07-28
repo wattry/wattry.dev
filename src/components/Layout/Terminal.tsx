@@ -166,29 +166,35 @@ function Terminal() {
     }, '');
   };
   const promiseHandler = async (debug: boolean, setContent: typeof setBufferedContent) => {
+    const lines: ReactElement[] = [];
+    const append = (line: ReactElement) => {
+      lines.push(line);
+      setContent(<>{lines}</>);
+    };
     const worker = async (index: number): Promise<{ character: string }> => {
       const character = String.fromCharCode(index < 96 ? index + 33 : index + 66);
-      const label = `${index} ${character}`;
-
-      console.time(label);
+      const start = performance.now();
 
       return new Promise<{ character: string }>((resolve, reject) => {
-        setContent(`Promise n: ${index}. character: ${character}`);
+        append(<Typography key={`start-${index}`} color="textSecondary">Promise n: {index}. character: {character}</Typography>);
 
         setTimeout(() => {
+          const elapsed = Math.round(performance.now() - start);
+
           if (index === 83) {
+            append(<Typography key={`end-${index}`} color="error">Promise {index} rejected in {elapsed}ms: Unable to handle promise</Typography>);
             reject(new Error('Unable to handle promise'));
           } else {
-            setContent(`Promise resolved n: ${index}`);
-            console.timeEnd(label);
+            append(<Typography key={`end-${index}`} color="success">Promise {index} resolved in {elapsed}ms</Typography>);
             resolve({ character });
           }
         }, 1500);
       });
     }
 
+    const start = performance.now();
+
     try {
-      console.time('promise');
       const b = new Batch<{ character: string }, [number]>({ debug });
 
       ', '.repeat(99).split(', ').forEach((_, index) => {
@@ -200,14 +206,13 @@ function Terminal() {
       return <>
         Data Count: {b.results.length}<br />
         Error Count: {b.errors.length}<br />
-        Debug: {b.debug ? 'Yes' : 'No'}
+        Debug: {b.debug ? 'Yes' : 'No'}<br />
+        Total: {Math.round(performance.now() - start)}ms
       </>
     } catch (e: unknown) {
       const error = e as Error;
 
       return <Message input={error} />
-    } finally {
-      console.timeEnd('promise');
     }
   }
 
