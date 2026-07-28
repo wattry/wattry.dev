@@ -37,26 +37,36 @@ work-org repos — safe because the output is anonymized.
 - Label each period by the dominant work type inferred from commit/PR/issue
   titles. Use ONLY this vocabulary (pick the closest match):
   API development, Auth & security, CI/CD & tooling, Refactoring,
-  Frontend/UI, Infrastructure, Data & storage, Docs, Code review.
+  Frontend/UI, Infrastructure, Data & storage, Docs, Code review,
+  Issue reports.
 - Mark periods in the top quartile of activity volume (commits + PRs + issues) `:crit`.
-- Rename repos to "Project A", "Project B", … ordered by total activity
-  volume (most active = Project A).
-- If review activity is too thin for per-project bars, merge all of it into
-  a single "Reviews" section.
+- Section names use a two-tier policy (brand value without leaking employer):
+  - **Employer/work-org repos** (and any repo the user hasn't sanctioned by
+    name): generic, non-identifying role names prefixed "Work — ", e.g.
+    "Work — Platform API", "Work — Web client", "Work — Developer tooling".
+    Never the repo, org, product, or ticket names.
+  - **Personal repos**: real names, prefixed by kind — "OSS — <name> (npm)"
+    for published libraries, "Side — <name>" for side projects,
+    "App — ", "Site — ", "Demo — ", "Tool — " as fits. Check visibility with
+    `gh repo view <repo> --json visibility`; public repos always safe to
+    name, private personal repos may be named (name only, no contents).
+- Bars under ~4 events that are isolated noise (a lone review, a one-commit
+  day) may be folded into an adjacent bar of the same section or dropped —
+  but list every drop in the run summary, never silently.
 
 ## 3. Anonymization gate (mandatory)
 
-Before writing the file, verify the chart contains:
+Before writing the file, verify — for **work-org repos only** — that the
+chart contains:
 
-- [ ] No repository names
-- [ ] No organization names
+- [ ] No work repository names
+- [ ] No work organization names
 - [ ] No ticket IDs (JIRA-style patterns like `ABC-123`)
-- [ ] No product or domain nouns
-- [ ] No usernames
+- [ ] No work product or domain nouns beyond generic role names
+- [ ] No coworker usernames
 
-Only the fixed label vocabulary, dates, counts, Project A/B aliases, section
-names, the title, and task IDs may appear. If any check fails, fix the labels
-and re-check before writing.
+Personal repo names (per the two-tier policy above) are allowed. If any
+check fails, fix the labels and re-check before writing.
 
 ## 4. Write output
 

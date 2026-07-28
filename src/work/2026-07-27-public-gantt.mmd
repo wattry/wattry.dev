@@ -3,99 +3,67 @@ gantt
     dateFormat YYYY-MM-DD
     axisFormat %b %Y
 
-    section Project A
+    section Work — Platform API
     Auth & security            :crit, a1, 2026-01-28, 2026-07-24
 
-    section Project B
+    section Work — Web app
     Code review                :crit, b1, 2026-01-29, 2026-07-24
 
-    section Project C
+    section Work — Document processing
     Data & storage             :c1, 2026-03-25, 2026-04-03
     CI/CD & tooling            :crit, c2, 2026-04-19, 2026-04-20
     Frontend/UI                :crit, c3, 2026-05-07, 2026-05-22
 
-    section Project D
+    section Work — Developer tooling
     CI/CD & tooling            :crit, d1, 2026-02-03, 2026-04-30
     Code review                :d2, 2026-05-22, 2026-06-17
     CI/CD & tooling            :d3, 2026-07-06, 2026-07-24
 
-    section Project E
-    Auth & security            :crit, e1, 2026-01-28, 2026-04-28
-    Code review                :e2, 2026-05-15, 1d
+    section Work — Infrastructure
+    Infrastructure (IaC)       :e1, 2026-01-28, 2026-02-02
+    Auth & security            :crit, e2, 2026-01-28, 2026-04-28
+    Infrastructure             :e3, 2026-07-09, 2026-07-14
 
-    section Project F
-    API development            :f1, 2026-02-16, 2026-02-17
-    CI/CD & tooling            :f2, 2026-06-04, 2026-06-07
-    CI/CD & tooling            :f3, 2026-07-12, 2026-07-17
+    section Work — Web client
+    Code review                :f1, 2026-02-24, 2026-03-06
+    Auth & security            :f2, 2026-04-23, 2026-05-08
+    Auth & security            :f3, 2026-06-06, 2026-06-12
 
-    section Project G
-    CI/CD & tooling            :g1, 2026-03-09, 2026-03-29
-    CI/CD & tooling            :crit, g2, 2026-06-05, 2026-06-08
+    section Work — Identity CLIs
+    Auth & security            :crit, g1, 2026-07-23, 2026-07-27
 
-    section Project H
-    Auth & security            :crit, h1, 2026-03-29, 2026-04-02
-    API development            :h2, 2026-05-24, 1d
+    section Work — CI/CD platform
+    Code review                :h1, 2026-02-13, 2026-02-24
+    Code review                :h2, 2026-06-02, 2026-07-10
 
-    section Project I
-    API development            :crit, i1, 2026-02-22, 2026-03-16
+    section OSS — promises (npm)
+    API development            :i1, 2026-02-16, 2026-02-17
+    CI/CD & tooling            :i2, 2026-06-04, 2026-06-07
+    API development            :i3, 2026-07-12, 2026-07-17
 
-    section Project J
-    Frontend/UI                :crit, j1, 2026-06-05, 2026-06-10
+    section OSS — tsconfig (npm)
+    CI/CD & tooling            :j1, 2026-03-09, 2026-03-29
+    CI/CD & tooling            :crit, j2, 2026-06-05, 2026-06-08
 
-    section Project K
-    Frontend/UI                :crit, k1, 2026-05-28, 2026-07-27
+    section OSS — stackit (issues)
+    Issue reports              :k1, 2026-05-07, 2026-05-20
+    Issue reports              :k2, 2026-06-22, 2026-06-24
 
-    section Project L
-    Code review                :l1, 2026-02-11, 1d
-    Frontend/UI                :crit, l2, 2026-05-09, 2026-05-23
+    section App — splitstupid
+    Frontend/UI                :crit, l1, 2026-06-05, 2026-06-10
 
-    section Project M
-    Auth & security            :crit, m1, 2026-07-24, 2026-07-27
+    section Site — wattry.dev
+    Frontend/UI                :crit, m1, 2026-05-28, 2026-07-27
 
-    section Project N
-    CI/CD & tooling            :n1, 2026-04-25, 2026-05-04
+    section Side — ReferOS
+    Auth & security            :crit, n1, 2026-03-29, 2026-04-02
+    Frontend/UI                :n2, 2026-05-18, 2026-05-24
 
-    section Project O
-    Code review                :o1, 2026-02-24, 2026-03-06
-    Frontend/UI                :o2, 2026-03-31, 2026-04-07
-    Auth & security            :o3, 2026-04-23, 2026-05-08
-    Auth & security            :o4, 2026-06-06, 2026-06-12
+    section Side — Postnesia
+    API development            :crit, o1, 2026-02-22, 2026-03-16
 
-    section Project P
-    Code review                :p1, 2026-02-13, 2026-02-24
-    CI/CD & tooling            :p2, 2026-04-07, 1d
-    Code review                :p3, 2026-04-24, 2026-04-27
-    Code review                :p4, 2026-05-18, 1d
-    Code review                :p5, 2026-06-02, 2026-07-10
-    Code review                :p6, 2026-07-27, 1d
+    section Demo — WorkOS auth
+    Frontend/UI                :crit, p1, 2026-05-09, 2026-05-23
 
-    section Project Q
-    Infrastructure             :q1, 2026-01-28, 2026-02-02
-
-    section Project R
-    Auth & security            :r1, 2026-07-23, 2026-07-24
-
-    section Project S
-    Code review                :s1, 2026-02-06, 2026-02-18
-    Code review                :s2, 2026-06-02, 2026-06-10
-    Infrastructure             :s3, 2026-07-09, 2026-07-14
-
-    section Project T
-    Frontend/UI                :t1, 2026-06-30, 2026-07-20
-
-    section Project U
-    Docs                       :u1, 2026-05-07, 2026-05-20
-    CI/CD & tooling            :u2, 2026-06-22, 2026-06-24
-
-    section Project V
-    Frontend/UI                :v1, 2026-05-23, 1d
-
-    section Project W
-    CI/CD & tooling            :w1, 2026-03-08, 1d
-    CI/CD & tooling            :w2, 2026-05-21, 1d
-
-    section Project X
-    Docs                       :x1, 2026-03-26, 1d
-
-    section Project Y
-    Frontend/UI                :y1, 2026-05-18, 1d
+    section Tool — PR analytics
+    CI/CD & tooling            :q1, 2026-04-25, 2026-05-04
