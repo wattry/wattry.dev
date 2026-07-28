@@ -480,11 +480,11 @@ function Terminal() {
     work: {
       handler() {
         return <>
-          <Typography>Engineering activity over the trailing 6 months — professional work (anonymized) plus open-source and personal projects.</Typography>
-          <img src={workGantt} alt="Gantt chart of anonymized engineering activity over the last 6 months" style={{ width: '100%' }} />
+          <Typography>Engineering activity over the trailing 18 months — professional work (anonymized) plus open-source and personal projects.</Typography>
+          <img src={workGantt} alt="Gantt chart of anonymized engineering activity over the last 18 months" style={{ width: '100%' }} />
         </>;
       },
-      help: (<li><strong>work</strong> - 6-month engineering activity chart.<br /></li>)
+      help: (<li><strong>work</strong> - 18-month engineering activity chart.<br /></li>)
     }
   };
 

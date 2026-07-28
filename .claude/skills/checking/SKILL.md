@@ -1,17 +1,17 @@
 ---
 name: checking
-description: Generate an anonymized Mermaid Gantt chart of the last 6 months of GitHub work across all repos. Use when the user says "checking", "work gantt", "activity chart", or asks to regenerate the public work timeline.
+description: Generate an anonymized Mermaid Gantt chart of the last 18 months of GitHub work across all repos. Use when the user says "checking", "work gantt", "activity chart", or asks to regenerate the public work timeline.
 ---
 
-# checking — anonymized 6-month work Gantt
+# checking — anonymized 18-month work Gantt
 
 Generate a public-safe Mermaid Gantt chart of all GitHub activity over the
-trailing 6 months. The output goes on the public website: it must contain
+trailing 18 months. The output goes on the public website: it must contain
 **no project names or specifics** — only generic measures of work per period.
 
 ## 1. Gather data
 
-Compute the window start date: today minus 6 months, formatted `YYYY-MM-DD`.
+Compute the window start date: today minus 18 months, formatted `YYYY-MM-DD`.
 Substitute it for `$SINCE` and run:
 
     gh search commits --author=@me --committer-date=">$SINCE" --json repository,commit --limit 1000
@@ -76,7 +76,7 @@ Write to `src/work/YYYY-MM-DD-public-gantt.mmd` (today's date; never
 overwrite prior runs). Format:
 
     gantt
-        title 6-month engineering activity
+        title 18-month engineering activity
         dateFormat YYYY-MM-DD
         axisFormat %b %Y
 
