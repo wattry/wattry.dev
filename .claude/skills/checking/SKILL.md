@@ -46,10 +46,12 @@ work-org repos — safe because the output is anonymized.
     "Work — Platform API", "Work — Web client", "Work — Developer tooling".
     Never the repo, org, product, or ticket names.
   - **Personal repos**: real names, prefixed by kind — "OSS — <name> (npm)"
-    for published libraries, "Side — <name>" for side projects,
-    "App — ", "Site — ", "Demo — ", "Tool — " as fits. Check visibility with
-    `gh repo view <repo> --json visibility`; public repos always safe to
-    name, private personal repos may be named (name only, no contents).
+    for published libraries, "Personal Development — <name>" for personal
+    projects (never "Side"), "Site — ", "Demo — ", "Tool — " as fits. Check
+    visibility with `gh repo view <repo> --json visibility`; public repos
+    always safe to name, private personal repos may be named (name only, no
+    contents).
+- Excluded repos (never chart, regardless of activity): `wattry/splitstupid`.
 - Bars under ~4 events that are isolated noise (a lone review, a one-commit
   day) may be folded into an adjacent bar of the same section or dropped —
   but list every drop in the run summary, never silently.
