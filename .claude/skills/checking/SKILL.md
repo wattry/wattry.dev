@@ -77,4 +77,13 @@ overwrite prior runs). Format:
 
 Task IDs: lowercase section letter + counter (`a1`, `a2`, `b1`, …).
 
-Do not run tests or verification steps. Write the file, then commit.
+## 5. Render SVG for the site
+
+The site's terminal `work` command (`src/components/Layout/Terminal.tsx`)
+imports `src/static/work-gantt.svg`. Regenerate it from the new chart,
+overwriting the fixed filename:
+
+    npx -y @mermaid-js/mermaid-cli -i src/work/YYYY-MM-DD-public-gantt.mmd -o src/static/work-gantt.svg -t dark -b transparent
+
+Do not run tests or verification steps. Write the `.mmd`, render the SVG,
+then commit both.
