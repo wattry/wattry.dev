@@ -51,9 +51,14 @@ Substitute it for `$SINCE` and run:
     gh search prs --reviewed-by=@me --created=">$SINCE" --json repository,createdAt --limit 1000
     gh search issues --author=@me --created=">$SINCE" --json repository,title,createdAt,closedAt --limit 1000
 
+Note: the `--reviewed-by` search filters by PR creation date (GitHub has no
+reviewed-date qualifier), so reviews on older PRs are missed and `createdAt`
+is a proxy for review timing only.
+
 If any command returns exactly its limit, the result is capped: re-run with
-narrower date sub-ranges (e.g. month by month) and merge, so no activity is
-missed. All repos visible to the gh auth are in scope, including private and
+narrower date sub-ranges (e.g. `--created=2026-01-01..2026-01-31` month by
+month) and merge, deduplicating any items that appear in overlapping ranges,
+so no activity is missed. All repos visible to the gh auth are in scope, including private and
 work-org repos — safe because the output is anonymized.
 
 ## 2. Cluster and label
@@ -65,7 +70,7 @@ work-org repos — safe because the output is anonymized.
   titles. Use ONLY this vocabulary (pick the closest match):
   API development, Auth & security, CI/CD & tooling, Refactoring,
   Frontend/UI, Infrastructure, Data & storage, Docs, Code review.
-- Mark periods in the top quartile of commit volume `:crit`.
+- Mark periods in the top quartile of activity volume (commits + PRs + issues) `:crit`.
 - Rename repos to "Project A", "Project B", … ordered by total activity
   volume (most active = Project A).
 - If review activity is too thin for per-project bars, merge all of it into
@@ -81,8 +86,9 @@ Before writing the file, verify the chart contains:
 - [ ] No product or domain nouns
 - [ ] No usernames
 
-Only the fixed label vocabulary, dates, and counts may appear. If any check
-fails, fix the labels and re-check before writing.
+Only the fixed label vocabulary, dates, counts, Project A/B aliases, section
+names, the title, and task IDs may appear. If any check fails, fix the labels
+and re-check before writing.
 
 ## 4. Write output
 
