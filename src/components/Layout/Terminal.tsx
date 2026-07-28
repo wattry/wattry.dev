@@ -85,7 +85,7 @@ const Message = (
 };
 
 function Terminal() {
-  const { setTemporaryContent, setBufferedContent } = useContext(TerminalContext);
+  const { setTemporaryContent } = useContext(TerminalContext);
   const [theme, setTheme] = useState<string>("wattry");
   const [prompt] = useState<string | ReactElement>(<Prompt />);
   const [history, setHistory] = useState<string[]>([]);
@@ -165,9 +165,15 @@ function Terminal() {
       return adjusted;
     }, '');
   };
-  const promiseHandler = async (debug: boolean, setContent: typeof setBufferedContent) => {
+  const promiseHandler = async (debug: boolean, setContent: typeof setTemporaryContent) => {
     const lines: ReactElement[] = [];
+    // In-flight timers from the cancelled batch still fire after settle()
+    // returns; the guard stops them writing over the command's final output.
+    let done = false;
     const append = (line: ReactElement) => {
+      if (done) {
+        return;
+      }
       lines.push(line);
       setContent(<>{lines}</>);
     };
@@ -204,6 +210,7 @@ function Terminal() {
       await b.settle();
 
       return <>
+        {lines}
         Data Count: {b.results.length}<br />
         Error Count: {b.errors.length}<br />
         Debug: {b.debug ? 'Yes' : 'No'}<br />
@@ -212,7 +219,12 @@ function Terminal() {
     } catch (e: unknown) {
       const error = e as Error;
 
-      return <Message input={error} />
+      return <>
+        {lines}
+        <Message input={error} />
+      </>
+    } finally {
+      done = true;
     }
   }
 
@@ -456,7 +468,7 @@ function Terminal() {
           setTemporaryContent('Check the console logs. Make sure you enable verbose mode');
         }
 
-        return promiseHandler(debug, setBufferedContent);
+        return promiseHandler(debug, setTemporaryContent);
       }, help: (
         <>
           <li><strong>promise</strong> - Use the @wattry/promises library to handle batches of promises.<br /></li>
