@@ -56,7 +56,7 @@ function TypeTest({ snippet, onDone, onAbort }: TypeTestProps) {
       }
 
       event.preventDefault();
-      event.stopPropagation();
+      event.stopImmediatePropagation();
 
       if (event.key === 'Escape') {
         doneRef.current = true;
@@ -67,6 +67,10 @@ function TypeTest({ snippet, onDone, onAbort }: TypeTestProps) {
       if (event.key === 'Backspace') {
         typedRef.current = typedRef.current.slice(0, -1);
         setTyped(typedRef.current);
+        return;
+      }
+
+      if (event.ctrlKey || event.metaKey || event.altKey) {
         return;
       }
 

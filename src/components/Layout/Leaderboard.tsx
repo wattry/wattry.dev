@@ -126,6 +126,10 @@ function Leaderboard({ result }: LeaderboardProps) {
         return;
       }
 
+      if (event.ctrlKey || event.metaKey || event.altKey) {
+        return;
+      }
+
       if (/^[a-zA-Z]$/.test(event.key) && initialsRef.current.length < 3) {
         initialsRef.current += event.key.toUpperCase();
         setInitials(initialsRef.current);
