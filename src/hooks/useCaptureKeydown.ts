@@ -9,12 +9,13 @@ export function useCaptureKeydown(handler: KeydownHandler) {
 
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
       if (event.ctrlKey || event.metaKey || event.altKey) {
         return;
       }
 
-      event.preventDefault();
-      event.stopImmediatePropagation();
       handlerRef.current(event);
     };
 

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { styled } from '@mui/material/styles';
+import { useCaptureKeydown } from '../../hooks/useCaptureKeydown';
 
 interface SlTrainProps {
   onDone: () => void;
@@ -29,6 +30,8 @@ const COLS = 90;
 const FRAME_MS = 80;
 
 function SlTrain({ onDone }: SlTrainProps) {
+  useCaptureKeydown(() => {});
+
   const [offset, setOffset] = useState(COLS);
   const doneRef = useRef(false);
 
@@ -51,7 +54,14 @@ function SlTrain({ onDone }: SlTrainProps) {
       setOffset(offsetRef.current);
     }, FRAME_MS);
 
-    return () => clearInterval(timer);
+    return () => {
+      clearInterval(timer);
+
+      if (!doneRef.current) {
+        doneRef.current = true;
+        onDone();
+      }
+    };
   }, [onDone]);
 
   const rows = TRAIN.map((row) => {
