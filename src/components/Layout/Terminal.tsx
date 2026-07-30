@@ -15,7 +15,6 @@ import SlTrain from "./SlTrain";
 import MatrixRain from "./MatrixRain";
 import Snake, { snakeRank } from "./Snake";
 import TopMonitor from "./TopMonitor";
-import GithubFeed from "./GithubFeed";
 
 const Root = styled('div')(({ theme }) => ({
   fontFamily: 'Space Grotesk',
@@ -647,12 +646,6 @@ function Terminal() {
         });
       },
       help: (<li><strong>top</strong> - Site process monitor. q or Esc exits.<br /></li>)
-    },
-    gh: {
-      handler() {
-        return <GithubFeed />;
-      },
-      help: (<li><strong>gh</strong> - Live GitHub activity feed.<br /></li>)
     },
   };
 
