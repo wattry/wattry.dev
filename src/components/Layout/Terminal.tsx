@@ -660,7 +660,21 @@ function Terminal() {
       help: (<li><strong>lomu</strong> - RWC 1995: Jonah Lomu vs Mike Catt. Pay respect.<br /></li>)
     },
     quiz: {
-      handler() {
+      handler(args) {
+        if (args[0] === 'original') {
+          return <>
+            <Typography>The Impossible Quiz (Splapp-me-do, 2007) — served by the Internet Archive's Flash preservation library, emulated with Ruffle. Click inside to start.</Typography>
+            <iframe
+              src="https://archive.org/embed/the-impossible-quiz_202207"
+              width="640"
+              height="480"
+              frameBorder="0"
+              allowFullScreen
+              title="The Impossible Quiz (Internet Archive)"
+            />
+          </>;
+        }
+
         return new Promise<ReactElement>((resolve) => {
           setTemporaryContent(
             <ImpossibleQuiz
@@ -673,7 +687,10 @@ function Terminal() {
           );
         });
       },
-      help: (<li><strong>quiz</strong> - Impossible quiz homage. One wrong answer, back to the start.<br /></li>)
+      help: (<>
+        <li><strong>quiz</strong> - Impossible quiz homage. One wrong answer, back to the start.<br /></li>
+        <strong style={style}>quiz original</strong> - The real 2007 game, via the Internet Archive.<br />
+      </>)
     },
   };
 
