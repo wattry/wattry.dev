@@ -15,6 +15,7 @@ import SlTrain from "./SlTrain";
 import MatrixRain from "./MatrixRain";
 import Snake, { snakeRank } from "./Snake";
 import TopMonitor from "./TopMonitor";
+import Lomu from "./Lomu";
 
 const Root = styled('div')(({ theme }) => ({
   fontFamily: 'Space Grotesk',
@@ -646,6 +647,16 @@ function Terminal() {
         });
       },
       help: (<li><strong>top</strong> - Site process monitor. q or Esc exits.<br /></li>)
+    },
+    lomu: {
+      handler() {
+        return new Promise<ReactElement>((resolve) => {
+          setTemporaryContent(
+            <Lomu onDone={() => resolve(<Typography>lomu: four tries that day. rest easy, big man.</Typography>)} />
+          );
+        });
+      },
+      help: (<li><strong>lomu</strong> - RWC 1995: Jonah Lomu vs Mike Catt. Pay respect.<br /></li>)
     },
   };
 
