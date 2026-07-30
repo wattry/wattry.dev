@@ -13,7 +13,7 @@ import Leaderboard from "./Leaderboard";
 import { snippets } from "../../static/snippets";
 import SlTrain from "./SlTrain";
 import MatrixRain from "./MatrixRain";
-import Snake from "./Snake";
+import Snake, { snakeRank } from "./Snake";
 import TopMonitor from "./TopMonitor";
 import GithubFeed from "./GithubFeed";
 
@@ -634,7 +634,7 @@ function Terminal() {
       handler() {
         return new Promise<ReactElement>((resolve) => {
           setTemporaryContent(
-            <Snake onQuit={(score) => resolve(<Typography>snake: final score {score}</Typography>)} />
+            <Snake onQuit={(score) => resolve(<Typography>snake: game over — score {score} — rank: {snakeRank(score)}</Typography>)} />
           );
         });
       },
@@ -689,7 +689,7 @@ function Terminal() {
 
             if (!isHelp && !commands[command]) {
               return <>
-                {`${command}: command not found`} <br />
+                {`${command}: Really? Just ask for "help"`} <br />
               </>;
             }
 
@@ -723,7 +723,7 @@ function Terminal() {
           }
 
           return <>
-            {`${command}: command not found`} <br />
+            {`${command}: Really? Just ask for "help"`} <br />
           </>;
         }}
       />

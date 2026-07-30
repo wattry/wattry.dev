@@ -26,6 +26,33 @@ const Board = styled('pre')(({ theme }) => ({
   color: theme.palette.success.main,
 }));
 
+const GameOver = styled('pre')(({ theme }) => ({
+  margin: 0,
+  lineHeight: 1.2,
+  color: theme.palette.error.main,
+}));
+
+// Auto-repeat from the key held at the moment of collision fires within
+// ~30ms; without a grace period it dismisses the game-over screen unseen.
+const GAME_OVER_GRACE_MS = 600;
+
+export const snakeRank = (score: number): string => {
+  if (score === 0) {
+    return 'segfault';
+  }
+  if (score < 50) {
+    return 'caffeinated intern';
+  }
+  if (score < 120) {
+    return 'code monkey';
+  }
+  if (score < 250) {
+    return 'senior serpent';
+  }
+
+  return '10x snake';
+};
+
 const randomFood = (occupied: Point[]): Point => {
   while (true) {
     const food = { x: Math.floor(Math.random() * COLS), y: Math.floor(Math.random() * ROWS) };
@@ -43,6 +70,7 @@ function Snake({ onQuit }: SnakeProps) {
   const foodRef = useRef<Point>({ x: 18, y: 8 });
   const scoreRef = useRef(0);
   const overRef = useRef(false);
+  const overAtRef = useRef(0);
   const doneRef = useRef(false);
   const [, setTick] = useState(0);
 
@@ -51,7 +79,17 @@ function Snake({ onQuit }: SnakeProps) {
       return;
     }
 
-    if (overRef.current || event.key === 'Escape') {
+    if (overRef.current) {
+      if (performance.now() - overAtRef.current < GAME_OVER_GRACE_MS) {
+        return;
+      }
+
+      doneRef.current = true;
+      onQuit(scoreRef.current);
+      return;
+    }
+
+    if (event.key === 'Escape') {
       doneRef.current = true;
       onQuit(scoreRef.current);
       return;
@@ -98,6 +136,7 @@ function Snake({ onQuit }: SnakeProps) {
 
       if (hitWall || hitSelf) {
         overRef.current = true;
+        overAtRef.current = performance.now();
         setTick((prev) => prev + 1);
         return;
       }
@@ -134,12 +173,22 @@ function Snake({ onQuit }: SnakeProps) {
     rows.push(row);
   }
 
+  const banner = [
+    '╔══════════════════════════╗',
+    '║        GAME OVER         ║',
+    `║  score:  ${String(scoreRef.current).padEnd(15)} ║`,
+    `║  length: ${String(snakeRef.current.length).padEnd(15)} ║`,
+    `║  rank:   ${snakeRank(scoreRef.current).padEnd(15)} ║`,
+    '╚══════════════════════════╝',
+    '      any key to exit',
+  ].join('\n');
+
   return (
     <>
       <Typography>
         score: {scoreRef.current} — arrows/WASD steer, Esc quits
-        {overRef.current ? ' — GAME OVER, any key to exit' : ''}
       </Typography>
+      {overRef.current && <GameOver>{banner}</GameOver>}
       <Board>{rows.join('\n')}</Board>
     </>
   );
