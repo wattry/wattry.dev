@@ -168,16 +168,14 @@ function Lomu({ onDone }: LomuProps) {
       setFrame(buildFrame(runner.x, stride));
     }, FRAME_MS);
 
+    // No onDone here: StrictMode dev double-mount runs this cleanup
+    // immediately after first mount, which would resolve the command's
+    // promise before the animation renders a single frame.
     return () => {
       clearInterval(timer);
 
       if (endTimer !== undefined) {
         clearTimeout(endTimer);
-      }
-
-      if (!doneRef.current) {
-        doneRef.current = true;
-        onDone();
       }
     };
   }, [onDone]);

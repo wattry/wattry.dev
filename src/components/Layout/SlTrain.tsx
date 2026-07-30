@@ -54,14 +54,10 @@ function SlTrain({ onDone }: SlTrainProps) {
       setOffset(offsetRef.current);
     }, FRAME_MS);
 
-    return () => {
-      clearInterval(timer);
-
-      if (!doneRef.current) {
-        doneRef.current = true;
-        onDone();
-      }
-    };
+    // No onDone here: StrictMode dev double-mount runs this cleanup
+    // immediately after first mount, which would resolve the command's
+    // promise before the animation renders a single frame.
+    return () => clearInterval(timer);
   }, [onDone]);
 
   const rows = TRAIN.map((row) => {
