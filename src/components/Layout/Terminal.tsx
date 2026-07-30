@@ -12,6 +12,7 @@ import TypeTest from "./TypeTest";
 import Leaderboard from "./Leaderboard";
 import { snippets } from "../../static/snippets";
 import SlTrain from "./SlTrain";
+import MatrixRain from "./MatrixRain";
 
 const Root = styled('div')(({ theme }) => ({
   fontFamily: 'Space Grotesk',
@@ -617,6 +618,14 @@ function Terminal() {
         });
       },
       help: (<li><strong>sl</strong> - You meant ls. Enjoy the ride.<br /></li>)
+    },
+    matrix: {
+      handler() {
+        return new Promise<ReactElement>((resolve) => {
+          setTemporaryContent(<MatrixRain onExit={() => resolve(<Typography>wake up, Neo.</Typography>)} />);
+        });
+      },
+      help: (<li><strong>matrix</strong> - Follow the white rabbit. Any key exits.<br /></li>)
     },
   };
 
