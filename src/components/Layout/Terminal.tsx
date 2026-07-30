@@ -14,6 +14,7 @@ import { snippets } from "../../static/snippets";
 import SlTrain from "./SlTrain";
 import MatrixRain from "./MatrixRain";
 import Snake from "./Snake";
+import TopMonitor from "./TopMonitor";
 
 const Root = styled('div')(({ theme }) => ({
   fontFamily: 'Space Grotesk',
@@ -637,6 +638,14 @@ function Terminal() {
         });
       },
       help: (<li><strong>snake</strong> - Terminal snake. Arrows/WASD, Esc quits.<br /></li>)
+    },
+    top: {
+      handler() {
+        return new Promise<ReactElement>((resolve) => {
+          setTemporaryContent(<TopMonitor onExit={() => resolve(<Typography>top closed</Typography>)} />);
+        });
+      },
+      help: (<li><strong>top</strong> - Site process monitor. q or Esc exits.<br /></li>)
     },
   };
 
