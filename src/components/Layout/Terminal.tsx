@@ -71,7 +71,8 @@ type DefaultConfig = typeof defaultConfig;
 
 interface Command {
   handler: (args: string[]) => ReactElement | Promise<ReactElement>,
-  help: JSX.Element | (() => ReactElement)
+  help: JSX.Element | (() => ReactElement),
+  text?: () => string[]
 };
 
 const Message = (
@@ -86,6 +87,56 @@ const Message = (
   }
 
   return <Message input={new Error('Unexpected error!')} />;
+};
+
+const wrapText = (text: string, width: number): string[] => {
+  const words = text.split(/\s+/).filter(Boolean);
+  const lines: string[] = [];
+  let current = '';
+
+  for (const word of words) {
+    if (current && (current.length + word.length + 1) > width) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = current ? `${current} ${word}` : word;
+    }
+  }
+
+  if (current) {
+    lines.push(current);
+  }
+
+  return lines.length ? lines : [''];
+};
+
+const cowsayArt = (text: string): string => {
+  const lines = wrapText(text, 40);
+  const width = Math.max(...lines.map((line) => line.length));
+  const top = ` ${'_'.repeat(width + 2)}`;
+  const bottom = ` ${'-'.repeat(width + 2)}`;
+  const body = lines.map((line, index) => {
+    const padded = line.padEnd(width);
+
+    if (lines.length === 1) {
+      return `< ${padded} >`;
+    }
+    if (index === 0) {
+      return `/ ${padded} \\`;
+    }
+    if (index === lines.length - 1) {
+      return `\\ ${padded} /`;
+    }
+
+    return `| ${padded} |`;
+  });
+  const cow = `        \\   ^__^
+         \\  (oo)\\_______
+            (__)\\       )\\/\\
+                ||----w |
+                ||     ||`;
+
+  return [top, ...body, bottom, cow].join('\n');
 };
 
 function Terminal() {
@@ -249,13 +300,15 @@ function Terminal() {
       handler() {
         return skillsContent;
       },
-      help: (<li><strong>skills</strong> - What I can do.<br /></li>)
+      help: (<li><strong>skills</strong> - What I can do.<br /></li>),
+      text: () => skills,
     },
     ls: {
       handler() {
         return <Typography>{Object.keys(files).map((name: string, i: number) => <li key={`file-${i}`}>{name}</li>)}</Typography>;
       },
-      help: (<li><strong>ls</strong> - List files.<br /></li>)
+      help: (<li><strong>ls</strong> - List files.<br /></li>),
+      text: () => Object.keys(files),
     },
     pwd: {
       handler() {
@@ -357,7 +410,8 @@ function Terminal() {
         const entries = [...history, 'history'];
         return <Typography>{entries.map((entry, i) => <li key={i}>{`${i + 1}  ${entry}`}</li>)}</Typography>;
       },
-      help: (<li><strong>echo &lt;text&gt;</strong> - Print text.<br /></li>)
+      help: (<li><strong>echo &lt;text&gt;</strong> - Print text.<br /></li>),
+      text: () => history.map((entry, i) => `${i + 1}  ${entry}`),
     },
     theme: {
       handler() {
@@ -367,7 +421,8 @@ function Terminal() {
         <li><strong>theme</strong> - Get the current theme.<br /></li>
         <strong style={style}>theme &lt;name&gt;</strong> - Changes the theme of the terminal.<br />
         <strong style={style}>theme list</strong> - List available themes.<br />
-      </>)
+      </>),
+      text: () => themes,
     },
     config: {
       handler(args) {
@@ -515,7 +570,43 @@ function Terminal() {
         <li><strong>typetest</strong> - Code typing test. Esc aborts.<br /></li>
         <strong style={style}>typetest board</strong> - Global top-20 leaderboard.<br />
       </>)
-    }
+    },
+    sudo: {
+      handler(args) {
+        if (!args[0]) {
+          return <Message input={new Error('usage: sudo <command>')} />;
+        }
+
+        return <Message input={new Error('wattry is not in the sudoers file. This incident will be reported.')} />;
+      },
+      help: (<li><strong>sudo &lt;command&gt;</strong> - Run a command as root. Surely.<br /></li>)
+    },
+    man: {
+      handler(args) {
+        const [name] = args;
+
+        if (!name) {
+          return <Message input={new Error('What manual page do you want?')} />;
+        }
+
+        const command = commands[name];
+
+        if (!command) {
+          return <Message input={new Error(`No manual entry for ${name}`)} />;
+        }
+
+        return <>{handleHelp(command)}</>;
+      },
+      help: (<li><strong>man &lt;command&gt;</strong> - Show a command's manual.<br /></li>)
+    },
+    cowsay: {
+      handler(args) {
+        const text = args.join(' ').trim() || 'moo';
+
+        return <pre style={{ margin: 0 }}>{cowsayArt(text)}</pre>;
+      },
+      help: (<li><strong>cowsay &lt;text&gt;</strong> - A cow says your text.<br /></li>)
+    },
   };
 
   return (
@@ -526,20 +617,62 @@ function Terminal() {
         themes={{ "wattry": config }}
         welcomeMessage={<span>Type "help" for available commands.<br /></span>}
         defaultHandler={(command: string, args: string) => {
-          record(`${command} ${args}`);
+          record(`${command} ${args}`.trim());
 
-          if (command === 'help' || command === 'h') {
+          if (command === 'grep') {
+            return <Message input={new Error('usage: <command> | grep <pattern>')} />;
+          }
+
+          const [rawArgs = '', ...pipes] = args.split('|').map((part) => part.trim());
+
+          if (pipes.length > 1) {
+            return <Message input={new Error('only a single | grep stage is supported')} />;
+          }
+
+          const [pipe] = pipes;
+          const isHelp = command === 'help' || command === 'h';
+
+          if (pipe !== undefined) {
+            const [pipeCommand, ...patternParts] = pipe.split(' ');
+            const pattern = patternParts.join(' ');
+
+            if (pipeCommand !== 'grep' || !pattern) {
+              return <Message input={new Error('usage: <command> | grep <pattern>')} />;
+            }
+
+            if (!isHelp && !commands[command]) {
+              return <>
+                {`${command}: command not found`} <br />
+              </>;
+            }
+
+            const lines = isHelp ? Object.keys(commands) : commands[command]?.text?.();
+
+            if (!lines) {
+              return <Message input={new Error(`grep: ${command}: output not pipeable`)} />;
+            }
+
+            const matches = lines.filter((line) => line.toLowerCase().includes(pattern.toLowerCase()));
+
+            if (!matches.length) {
+              return <></>;
+            }
+
+            return <Typography>{matches.map((line, i) => <li key={`grep-${i}`}>{line}</li>)}</Typography>;
+          }
+
+          if (isHelp) {
             return <>{Object.values(commands).map((command) => handleHelp(command))}</>;
           }
 
           const result = commands?.[command];
 
           if (result) {
-            if (args.startsWith('help') || args.startsWith('-h') || args.startsWith('--help')) {
+            if (rawArgs.startsWith('help') || rawArgs.startsWith('-h') || rawArgs.startsWith('--help')) {
               return handleHelp(result);
             }
 
-            return result.handler(args.split(' '));
+            return result.handler(rawArgs.split(' '));
           }
 
           return <>
