@@ -11,6 +11,7 @@ import workGantt from "../../static/work-gantt.svg";
 import TypeTest from "./TypeTest";
 import Leaderboard from "./Leaderboard";
 import { snippets } from "../../static/snippets";
+import SlTrain from "./SlTrain";
 
 const Root = styled('div')(({ theme }) => ({
   fontFamily: 'Space Grotesk',
@@ -606,6 +607,16 @@ function Terminal() {
         return <pre style={{ margin: 0 }}>{cowsayArt(text)}</pre>;
       },
       help: (<li><strong>cowsay &lt;text&gt;</strong> - A cow says your text.<br /></li>)
+    },
+    sl: {
+      handler() {
+        return new Promise<ReactElement>((resolve) => {
+          setTemporaryContent(
+            <SlTrain onDone={() => resolve(<Typography>you have new mail? no. you typed sl.</Typography>)} />
+          );
+        });
+      },
+      help: (<li><strong>sl</strong> - You meant ls. Enjoy the ride.<br /></li>)
     },
   };
 
