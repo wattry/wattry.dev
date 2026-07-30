@@ -37,20 +37,17 @@ const GameOver = styled('pre')(({ theme }) => ({
 const GAME_OVER_GRACE_MS = 600;
 
 export const snakeRank = (score: number): string => {
-  if (score === 0) {
-    return 'segfault';
+  if (score < 100) {
+    return 'Junior developer';
   }
-  if (score < 50) {
-    return 'caffeinated intern';
+  if (score < 200) {
+    return 'Middle Level Dev';
   }
-  if (score < 120) {
-    return 'code monkey';
-  }
-  if (score < 250) {
-    return 'senior serpent';
+  if (score < 300) {
+    return 'Senior Developer';
   }
 
-  return '10x snake';
+  return 'Professional Manager';
 };
 
 const randomFood = (occupied: Point[]): Point => {
@@ -174,13 +171,13 @@ function Snake({ onQuit }: SnakeProps) {
   }
 
   const banner = [
-    '╔══════════════════════════╗',
-    '║        GAME OVER         ║',
-    `║  score:  ${String(scoreRef.current).padEnd(15)} ║`,
-    `║  length: ${String(snakeRef.current.length).padEnd(15)} ║`,
-    `║  rank:   ${snakeRank(scoreRef.current).padEnd(15)} ║`,
-    '╚══════════════════════════╝',
-    '      any key to exit',
+    '╔═══════════════════════════════╗',
+    '║           GAME OVER           ║',
+    `║  score:  ${String(scoreRef.current).padEnd(20)} ║`,
+    `║  length: ${String(snakeRef.current.length).padEnd(20)} ║`,
+    `║  rank:   ${snakeRank(scoreRef.current).padEnd(20)} ║`,
+    '╚═══════════════════════════════╝',
+    '        any key to exit',
   ].join('\n');
 
   return (
