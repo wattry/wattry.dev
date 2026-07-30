@@ -16,6 +16,7 @@ import MatrixRain from "./MatrixRain";
 import Snake, { snakeRank } from "./Snake";
 import TopMonitor from "./TopMonitor";
 import Lomu from "./Lomu";
+import ImpossibleQuiz from "./ImpossibleQuiz";
 
 const Root = styled('div')(({ theme }) => ({
   fontFamily: 'Space Grotesk',
@@ -657,6 +658,22 @@ function Terminal() {
         });
       },
       help: (<li><strong>lomu</strong> - RWC 1995: Jonah Lomu vs Mike Catt. Pay respect.<br /></li>)
+    },
+    quiz: {
+      handler() {
+        return new Promise<ReactElement>((resolve) => {
+          setTemporaryContent(
+            <ImpossibleQuiz
+              onDone={({ won, attempts, reached }) => resolve(
+                won
+                  ? <Typography>quiz: conquered in {attempts} attempt{attempts === 1 ? '' : 's'}. impossible no more.</Typography>
+                  : <Typography>quiz: rage quit at question {reached}, attempt {attempts}. it wins again.</Typography>
+              )}
+            />
+          );
+        });
+      },
+      help: (<li><strong>quiz</strong> - Impossible quiz homage. One wrong answer, back to the start.<br /></li>)
     },
   };
 
