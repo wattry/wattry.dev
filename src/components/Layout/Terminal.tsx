@@ -16,7 +16,7 @@ import MatrixRain from "./MatrixRain";
 import Snake, { snakeRank } from "./Snake";
 import TopMonitor from "./TopMonitor";
 import Lomu from "./Lomu";
-import ImpossibleQuiz from "./ImpossibleQuiz";
+import ImpossibleQuizModal from "./ImpossibleQuizModal";
 
 const Root = styled('div')(({ theme }) => ({
   fontFamily: 'Space Grotesk',
@@ -660,37 +660,10 @@ function Terminal() {
       help: (<li><strong>lomu</strong> - RWC 1995: Jonah Lomu vs Mike Catt. Pay respect.<br /></li>)
     },
     quiz: {
-      handler(args) {
-        if (args[0] === 'original') {
-          return <>
-            <Typography>The Impossible Quiz (Splapp-me-do, 2007) — served by the Internet Archive's Flash preservation library, emulated with Ruffle. Click inside to start.</Typography>
-            <iframe
-              src="https://archive.org/embed/the-impossible-quiz_202207"
-              width="640"
-              height="480"
-              frameBorder="0"
-              allowFullScreen
-              title="The Impossible Quiz (Internet Archive)"
-            />
-          </>;
-        }
-
-        return new Promise<ReactElement>((resolve) => {
-          setTemporaryContent(
-            <ImpossibleQuiz
-              onDone={({ won, attempts, reached }) => resolve(
-                won
-                  ? <Typography>quiz: conquered in {attempts} attempt{attempts === 1 ? '' : 's'}. impossible no more.</Typography>
-                  : <Typography>quiz: rage quit at question {reached}, attempt {attempts}. it wins again.</Typography>
-              )}
-            />
-          );
-        });
+      handler() {
+        return <ImpossibleQuizModal />;
       },
-      help: (<>
-        <li><strong>quiz</strong> - Impossible quiz homage. One wrong answer, back to the start.<br /></li>
-        <strong style={style}>quiz original</strong> - The real 2007 game, via the Internet Archive.<br />
-      </>)
+      help: (<li><strong>quiz</strong> - The Impossible Quiz (2007), fullscreen via the Internet Archive. Esc or ✕ ends it.<br /></li>)
     },
   };
 
