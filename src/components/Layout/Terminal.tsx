@@ -13,6 +13,7 @@ import Leaderboard from "./Leaderboard";
 import { snippets } from "../../static/snippets";
 import SlTrain from "./SlTrain";
 import MatrixRain from "./MatrixRain";
+import Snake from "./Snake";
 
 const Root = styled('div')(({ theme }) => ({
   fontFamily: 'Space Grotesk',
@@ -626,6 +627,16 @@ function Terminal() {
         });
       },
       help: (<li><strong>matrix</strong> - Follow the white rabbit. Any key exits.<br /></li>)
+    },
+    snake: {
+      handler() {
+        return new Promise<ReactElement>((resolve) => {
+          setTemporaryContent(
+            <Snake onQuit={(score) => resolve(<Typography>snake: final score {score}</Typography>)} />
+          );
+        });
+      },
+      help: (<li><strong>snake</strong> - Terminal snake. Arrows/WASD, Esc quits.<br /></li>)
     },
   };
 
