@@ -19,12 +19,25 @@ const Bar = styled('div')(({ theme }) => ({
   backgroundColor: '#131519',
 }));
 
-// The archive.org player is itself responsive and letterboxes the game to
-// its container, so the iframe just needs to fill the space below the bar.
+const Stage = styled('div')(() => ({
+  flex: 1,
+  minHeight: 0,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  overflow: 'hidden',
+}));
+
+// The archive.org player renders the game at a fixed size, left-anchored
+// but vertically centred, inside its cross-origin frame — we can't scale
+// the game itself. Constraining the iframe width to hug that render and
+// centring it keeps the game in the middle instead of stranded in a
+// corner of the fullscreen void.
 const Frame = styled('iframe')(() => ({
   border: 0,
-  flex: 1,
-  width: '100%',
+  height: '100%',
+  width: 'min(96vw, 680px)',
+  flex: '0 0 auto',
 }));
 
 function ImpossibleQuizModal() {
@@ -43,11 +56,13 @@ function ImpossibleQuizModal() {
             <Typography>The Impossible Quiz — Splapp-me-do, 2007 — served by archive.org (Ruffle emulation)</Typography>
             <Button color="error" variant="outlined" onClick={() => setOpen(false)}>✕ close</Button>
           </Bar>
-          <Frame
-            src="https://archive.org/embed/the-impossible-quiz_202207"
-            allowFullScreen
-            title="The Impossible Quiz (Internet Archive)"
-          />
+          <Stage>
+            <Frame
+              src="https://archive.org/embed/the-impossible-quiz_202207"
+              allowFullScreen
+              title="The Impossible Quiz (Internet Archive)"
+            />
+          </Stage>
         </Surface>
       </Dialog>
     </>
