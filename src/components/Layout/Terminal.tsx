@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import type { ReactElement, JSX } from "react";
 import { styled } from '@mui/material/styles';
 import Typography from "@mui/material/Typography";
@@ -6,6 +6,7 @@ import Link from "@mui/material/Link";
 import { ReactTerminal, TerminalContext } from "react-terminal";
 import { Batch } from '@wattry/promises/browser'
 
+import idbPromise from "../../providers/idb";
 import { GlobeIcon } from "../GlobeLogo";
 import workGantt from "../../static/work-gantt.svg";
 import TypeTest from "./TypeTest";
@@ -61,7 +62,7 @@ const skills = [
 
 export const Lambda = () => <span style={{ color: '#FB7E14' }}>λ</span>;
 
-const Prompt = () => <span>~/workspace/wattry.com on main <GlobeIcon role="img" aria-label="wattry logo" /></span>;
+const Prompt = ({ user }: { user: string | null }) => <span>{user ? `~/workspace/${user}.com` : '~/workspace'} on main <GlobeIcon role="img" aria-label="wattry logo" /></span>;
 const color = 'linear-gradient(135deg, #2E6BFF 0%, #2E6BFF 20%, #7b2ff7 50%, #f107a3 80%, #f107a3 100%)';
 const yellow = '#F5E13C';
 const green = "#00FD61";
@@ -148,9 +149,23 @@ const cowsayArt = (text: string): string => {
 function Terminal() {
   const { setTemporaryContent } = useContext(TerminalContext);
   const [theme, setTheme] = useState<string>("wattry");
-  const [prompt] = useState<string | ReactElement>(<Prompt />);
+  const [user, setUser] = useState<string | null>(null);
+  const [ready, setReady] = useState(false);
   const [history, setHistory] = useState<string[]>([]);
   const [config, setConfig] = useState<DefaultConfig>(defaultConfig);
+  const prompt = <Prompt user={user} />;
+
+  useEffect(() => {
+    idbPromise
+      .then((idb) => idb.get('user-data', 'username'))
+      .then((saved) => {
+        if (typeof saved === 'string' && saved) {
+          setUser(saved);
+        }
+      })
+      .catch(() => undefined)
+      .finally(() => setReady(true));
+  }, []);
 
   const record = (entry: string) => setHistory((prev) => [...prev, entry]);
   const style = { marginLeft: '10px' };
@@ -292,9 +307,37 @@ function Terminal() {
   const commands: Record<string, Command> = {
     whoami: {
       handler() {
-        return <Typography>wattry — Senior Software Engineer, Solutions Architect &amp; Team Leader</Typography>;
+        if (user === 'wattry') {
+          return <Typography>wattry — Senior Software Engineer, Solutions Architect &amp; Team Leader</Typography>;
+        }
+
+        return <Typography>{user}</Typography>;
       },
       help: (<li><strong>whoami</strong> - Brief description.<br /></li>)
+    },
+    su: {
+      handler(args) {
+        const name = (args[0] ?? '').trim().toLowerCase();
+
+        if (!name) {
+          return <Message input={new Error('usage: su <user>')} />;
+        }
+
+        setUser(name);
+        idbPromise.then((idb) => idb.put('user-data', name, 'username')).catch(() => undefined);
+
+        return <Message input={`switched to ${name}`} />;
+      },
+      help: (<li><strong>su &lt;user&gt;</strong> - Switch user. Identify yourself before other commands.<br /></li>)
+    },
+    exit: {
+      handler() {
+        setUser(null);
+        idbPromise.then((idb) => idb.delete('user-data', 'username')).catch(() => undefined);
+
+        return <Message input={'logout'} />;
+      },
+      help: (<li><strong>exit</strong> - Log out. su required to return.<br /></li>)
     },
     about: {
       handler() {
@@ -319,7 +362,7 @@ function Terminal() {
     pwd: {
       handler() {
         record('pwd');
-        return <Typography>~/workspace/wattry.com</Typography>;
+        return <Typography>~/workspace/{user}.com</Typography>;
       },
       help: (<li><strong>pwd</strong> - Print working directory.<br /></li>)
     },
@@ -583,7 +626,7 @@ function Terminal() {
           return <Message input={new Error('usage: sudo <command>')} />;
         }
 
-        return <Message input={new Error('wattry is not in the sudoers file. This incident will be reported.')} />;
+        return <Message input={new Error(`${user} is not in the sudoers file. This incident will be reported.`)} />;
       },
       help: (<li><strong>sudo &lt;command&gt;</strong> - Run a command as root. Surely.<br /></li>)
     },
@@ -673,9 +716,19 @@ function Terminal() {
         prompt={prompt}
         theme={theme}
         themes={{ "wattry": config }}
-        welcomeMessage={<span>Type "help" for available commands.<br /></span>}
+        welcomeMessage={user
+          ? <span>Type "help" for available commands.<br /></span>
+          : <span>who are you? type "su &lt;name&gt;" to begin.<br /></span>}
         defaultHandler={(command: string, args: string) => {
           record(`${command} ${args}`.trim());
+
+          if (!ready) {
+            return <></>;
+          }
+
+          if (!user && !['su', 'help', 'h', 'man'].includes(command)) {
+            return <Message input={new Error('please identify yourself: su <name>')} />;
+          }
 
           if (command === 'grep') {
             return <Message input={new Error('usage: <command> | grep <pattern>')} />;
