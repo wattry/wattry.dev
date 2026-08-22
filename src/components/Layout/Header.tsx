@@ -17,9 +17,6 @@ export default function Header(): JSX.Element {
   return (
     <Root>
       <Typography variant='h1'>Explore</Typography>
-      <Typography variant='h3' component='h2'>
-        wattry
-      </Typography>
     </Root>
   );
 }
